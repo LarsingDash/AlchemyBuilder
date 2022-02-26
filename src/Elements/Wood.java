@@ -17,7 +17,7 @@ public class Wood extends Element {
     @Override
     public boolean behave() {
         if (this.isLit() && this.getBurnCount() > 5) {
-            ArrayList<Element> collisionElements = super.getEngine().detectCollision(getPosition(), Collections.singletonList(Wood.class), true, 25);
+            ArrayList<Element> collisionElements = super.getEngine().detectCollision(getPosition(), Collections.singletonList(Wood.class), true, new Point2D.Double(-1,-1), 25);
             if (!collisionElements.isEmpty()) {
                 for (Element collisionElement : collisionElements) {
                     collisionElement.setLit(true);

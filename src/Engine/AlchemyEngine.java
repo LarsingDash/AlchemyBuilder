@@ -104,12 +104,13 @@ public class AlchemyEngine extends Application {
     }
 
     //Collision
-    public ArrayList<Element> detectCollision(Point2D.Double position, List<Class<? extends Element>> filter, boolean onlyFilter, int range) {
+    public ArrayList<Element> detectCollision(Point2D.Double position, List<Class<? extends Element>> filter, boolean onlyFilter, Point2D.Double blindSpot, int range) {
         ArrayList<Element> collisions = new ArrayList<>();
 
         for (Element element : elements) {
             if ((filter.contains(element.getClass()) && !onlyFilter) || (!filter.contains(element.getClass()) && onlyFilter)) continue;
-            if (position == element.getPosition()) continue;
+            if (position.equals(element.getPosition()) || position.equals(blindSpot)) continue;
+            System.out.println(element.getName() + " || " + position + " || " + element.getPosition());
 
             if (position.distance(element.getPosition()) < range) collisions.add(element);
         }
@@ -117,12 +118,20 @@ public class AlchemyEngine extends Application {
         return collisions;
     }
 
+    public ArrayList<Element> detectCollision(Point2D.Double position, List<Class<? extends Element>> filter, boolean onlyFilter, Point2D.Double blindSpot) {
+        return detectCollision(position, filter, onlyFilter, blindSpot, 10);
+    }
+
     public ArrayList<Element> detectCollision(Point2D.Double position, List<Class<? extends Element>> filter, boolean onlyFilter) {
-        return detectCollision(position, filter, onlyFilter, 10);
+        return detectCollision(position, filter, onlyFilter, new Point2D.Double(-1,-1));
+    }
+
+    public ArrayList<Element> detectCollision(Point2D.Double position, List<Class<? extends Element>> filter) {
+        return detectCollision(position, filter, false);
     }
 
     public ArrayList<Element> detectCollision(Point2D.Double position) {
-        return detectCollision(position, new ArrayList<>(), false, 10);
+        return detectCollision(position, new ArrayList<>());
     }
 
     //Water
@@ -176,12 +185,13 @@ public class AlchemyEngine extends Application {
 
         allowedDistance = 20;
 
-        ArrayList<Class<? extends Element>> filter = new ArrayList<>();
-        System.out.println(horizontalDistanceCheck(fluid.getPosition(), true, filter, false));
-        boolean leftPossible = horizontalDistanceCheck(fluid.getPosition(), true, filter, false) >= allowedDistance;
-        boolean rightPossible = horizontalDistanceCheck(fluid.getPosition(), false, filter, false) >= allowedDistance;
+//        List<Class<? extends Element>> filter = Collections.singletonList(Water.class);
+        List<Class<? extends Element>> filter = new ArrayList<>();
+        System.out.println(horizontalDistanceCheck(fluid.getPosition(),  true, filter, fluid.getPosition()));
+//        boolean leftPossible = horizontalDistanceCheck(fluid.getPosition(), true, filter, false) >= allowedDistance;
+//        boolean rightPossible = horizontalDistanceCheck(fluid.getPosition(), false, filter, false) >= allowedDistance;
 
-        System.out.println(leftPossible + " " + rightPossible);
+//        System.out.println(leftPossible + " " + rightPossible);
 
         return FluidMovement.BLOCKED;
     }
@@ -223,10 +233,10 @@ public class AlchemyEngine extends Application {
 
         //Find distances
         ArrayList<Class<? extends Element>> empty = new ArrayList<>();
-        int upDistance = verticalDistanceCheck(origin, true, empty, false);
-        int downDistance = verticalDistanceCheck(origin, false, empty, false);
-        int leftDistance = horizontalDistanceCheck(origin, true, empty, false);
-        int rightDistance = horizontalDistanceCheck(origin, false, empty, false);
+        int upDistance = verticalDistanceCheck(origin, true);
+        int downDistance = verticalDistanceCheck(origin, false);
+        int leftDistance = horizontalDistanceCheck(origin, true, empty);
+        int rightDistance = horizontalDistanceCheck(origin, false, empty);
 
         upDistance *= 10;
         downDistance *= 10;
@@ -262,7 +272,7 @@ public class AlchemyEngine extends Application {
         }
     }
 
-    private int horizontalDistanceCheck(Point2D.Double origin, boolean isLeft, List<Class<? extends Element>> filter, boolean onlyFilter) {
+    private int horizontalDistanceCheck(Point2D.Double origin, boolean isLeft, List<Class<? extends Element>> filter, Point2D.Double blindSpot) {
         int amount = 10;
         if (!isLeft) {
             amount *= -1;
@@ -271,9 +281,10 @@ public class AlchemyEngine extends Application {
         for (int i = 0; true; i++) {
             double width = origin.x - amount * i;
             if (width > 1520 || width < 0) break;
-            ArrayList<Element> temp = detectCollision(new Point2D.Double(width, origin.y), filter, onlyFilter);
-            System.out.println(temp);
+            ArrayList<Element> temp = detectCollision(new Point2D.Double(width, origin.y), filter, false, blindSpot);
             if (!temp.isEmpty()) {
+                System.out.println(temp);
+                System.out.println(origin + " | " + temp.get(0).getPosition());
                 return i;
             }
         }
@@ -281,7 +292,11 @@ public class AlchemyEngine extends Application {
         return 0;
     }
 
-    private int verticalDistanceCheck(Point2D.Double origin, boolean isUp, List<Class<? extends Element>> filter, boolean onlyFilter) {
+    private int horizontalDistanceCheck(Point2D.Double origin, boolean isLeft, List<Class<? extends Element>> filter) {
+        return horizontalDistanceCheck(origin, isLeft, filter, new Point2D.Double(-1,-1));
+    }
+
+    private int verticalDistanceCheck(Point2D.Double origin, boolean isUp) {
         int amount = 10;
         if (!isUp) {
             amount *= -1;
@@ -290,7 +305,7 @@ public class AlchemyEngine extends Application {
         for (int i = 0; true; i++) {
             double height = origin.y + amount * i;
             if (height > 1080 || height < 0) break;
-            if (!detectCollision(new Point2D.Double(origin.x, height), filter, onlyFilter).isEmpty()) {
+            if (!detectCollision(new Point2D.Double(origin.x, height)).isEmpty()) {
                 return i;
             }
         }
