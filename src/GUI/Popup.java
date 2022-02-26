@@ -10,6 +10,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.awt.*;
+
 abstract public class Popup extends Stage {
     private AlchemyEngine engine;
     private String mainText;
@@ -48,7 +50,8 @@ abstract public class Popup extends Stage {
 
         left.setOnAction(event -> yesButton());
         right.setOnAction(event -> noButton());
-
+        Runnable sound = (Runnable) Toolkit.getDefaultToolkit().getDesktopProperty("win.sound.exclamation");
+        sound.run();
         show();
     }
 

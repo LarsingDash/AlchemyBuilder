@@ -2,10 +2,13 @@ package Elements;
 
 
 import Engine.AlchemyEngine;
+import Enums.CollisionCheckStyle;
 import org.jfree.fx.FXGraphics2D;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public abstract class Element implements Cloneable {
@@ -14,8 +17,10 @@ public abstract class Element implements Cloneable {
 
     //Properties
     private Point2D.Double position;
+    private CollisionCheckStyle collisionCheckStyle;
     private final String name;
     private Color color;
+    private List<Class<? extends Element>> filter;
 
     //Lifespan
     private int lifespan;
@@ -27,12 +32,13 @@ public abstract class Element implements Cloneable {
     private int burnCount = 0;
 
     //Constructors
-    public Element(AlchemyEngine engine, Point2D.Double position, String name, Color color, boolean isFlammable, int lifespan) {
+    public Element(AlchemyEngine engine, CollisionCheckStyle collisionCheckStyle, String name, Color color, boolean isFlammable, int lifespan) {
         //Engine
         this.engine = engine;
 
         //Properties
-        this.position = position;
+        this.position = new Point2D.Double(0,0);
+        this.collisionCheckStyle = collisionCheckStyle;
         this.name = name;
         this.color = color;
 
@@ -47,8 +53,11 @@ public abstract class Element implements Cloneable {
 
     //Behavioral
     public boolean update() {
+        //Check for worldBorder
         if (position.x <= 0 || position.x >= 1520 || position.y <= 0 || position.y >= 1080) return false;   //WorldBorder
-        if (isFlammable && isLit) {                                                                         //Burn
+
+        //Burn
+        if (isFlammable && isLit) {
             burnCount++;
             color = updateColorFade(Color.RED);
 
@@ -58,6 +67,7 @@ public abstract class Element implements Cloneable {
             }
         }
 
+        //Lifespan
         if (lifespan != 0) {
             age++;
 
@@ -66,10 +76,17 @@ public abstract class Element implements Cloneable {
             }
         }
 
-        return behave();
+        //Behavior
+        behave();
+
+        return !(position.x >= 1520) && !(position.x <= 0) && !(position.y >= 1080) && !(position.y <= 0);
     }
 
-    abstract public boolean behave();
+    abstract public void behave();
+
+    abstract public boolean collide(ArrayList<Element> collided);
+
+    abstract public void initFilter();
 
     private Color updateColorFade(Color toFadeTo) {
         float fraction = (float) burnCount / 30;
@@ -87,6 +104,9 @@ public abstract class Element implements Cloneable {
             Random random = new Random();
             lifespan = Math.max(1, lifespan + (random.nextInt(10) - 5));
         }
+
+        //Filter
+        initFilter();
     }
 
     //Getters and Setters
@@ -106,6 +126,14 @@ public abstract class Element implements Cloneable {
         this.position = position;
     }
 
+    public CollisionCheckStyle getCollisionCheckStyle() {
+        return collisionCheckStyle;
+    }
+
+    public void setCollisionCheckStyle(CollisionCheckStyle collisionCheckStyle) {
+        this.collisionCheckStyle = collisionCheckStyle;
+    }
+
     public String getName() {
         return name;
     }
@@ -116,6 +144,14 @@ public abstract class Element implements Cloneable {
 
     public void setColor(Color color) {
         this.color = color;
+    }
+
+    public List<Class<? extends Element>> getFilter () {
+        return filter;
+    }
+
+    public void setFilter(List<Class<? extends Element>> filter) {
+        this.filter = filter;
     }
 
     public boolean isLit() {

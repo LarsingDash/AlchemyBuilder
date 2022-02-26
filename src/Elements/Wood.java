@@ -1,6 +1,7 @@
 package Elements;
 
 import Engine.AlchemyEngine;
+import Enums.CollisionCheckStyle;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
@@ -11,24 +12,32 @@ public class Wood extends Element {
     public Wood() {this(null);}
 
     public Wood(AlchemyEngine engine) {
-        super(engine, new Point2D.Double(0,0), "wood", Color.decode("#a15b00"), true, 0);
+        super(engine, CollisionCheckStyle.NONE, "wood", Color.decode("#a15b00"), true, 0);
     }
 
     @Override
-    public boolean behave() {
-        if (this.isLit() && this.getBurnCount() > 5) {
-            ArrayList<Element> collisionElements = super.getEngine().detectCollision(getPosition(), Collections.singletonList(Wood.class), true, new Point2D.Double(-1,-1), 25);
+    public void behave() {
+        if (isLit() && getBurnCount() > 5) {
+            ArrayList<Element> collisionElements = getEngine().detectCollision(getPosition(), getEngine().invertFilter(Collections.singletonList(Wood.class)), CollisionCheckStyle.ROUND);
             if (!collisionElements.isEmpty()) {
                 for (Element collisionElement : collisionElements) {
                     collisionElement.setLit(true);
                 }
             }
 
-            if (this.getBurnCount() == 20) {
-                this.getEngine().addElement(new Fire(this.getEngine(), new Point2D.Double(getPosition().x, getPosition().y + 10), 7));
+            if (getBurnCount() == 20) {
+                getEngine().addElement(new Fire(getEngine(), new Point2D.Double(getPosition().x, getPosition().y + 10), 7));
             }
         }
+    }
 
+    @Override
+    public boolean collide(ArrayList<Element> collided) {
         return true;
+    }
+
+    @Override
+    public void initFilter() {
+        setFilter(new ArrayList<>());
     }
 }

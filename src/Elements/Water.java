@@ -1,22 +1,23 @@
 package Elements;
 
 import Engine.AlchemyEngine;
+import Enums.CollisionCheckStyle;
 
 import java.awt.*;
-import java.awt.geom.Point2D;
+import java.util.ArrayList;
 
 public class Water extends Element {
     private int sleepClock = -1;
     public Water() {this(null);}
 
     public Water(AlchemyEngine engine) {
-        super(engine, new Point2D.Double(0,0), "water", Color.BLUE, false, 0);
+        super(engine, CollisionCheckStyle.FLUID, "water", Color.BLUE, false, 0);
     }
 
     @Override
-    public boolean behave() {
+    public void behave() {
         sleepClock++;
-        if (sleepClock % 2 == 0) return true;
+        if (sleepClock % 2 == 0) return;
 
         switch (getEngine().moveFluid(this)) {
             case LEFT:
@@ -34,7 +35,16 @@ public class Water extends Element {
             default:
                 setColor(Color.RED);
         }
+    }
 
-        return true;
+    @Override
+    public boolean collide(ArrayList<Element> collided) {
+        //todo
+        return false;
+    }
+
+    @Override
+    public void initFilter() {
+        setFilter(new ArrayList<>());
     }
 }
