@@ -15,7 +15,7 @@ public class Water extends Element implements Fluid {
     public Water() {this(null);}
 
     public Water(AlchemyEngine engine) {
-        super(engine, CollisionCheckStyle.GRAVITY_FIRST, "water", Color.BLUE, false, 0);
+        super(engine, CollisionCheckStyle.GRAVITY_FIRST, Color.BLUE, false, 0);
     }
 
     @Override

@@ -4,12 +4,13 @@ import Elements.Block.Stone;
 import Elements.Block.Wood;
 import Elements.Element;
 import Elements.Elements;
+import Elements.Fluid.Fluid;
+import Elements.Fluid.Sand;
 import Elements.Fluid.Water;
 import Elements.Gas.Fire;
 import Engine.Saving.GameSave;
 import Enums.CollisionCheckStyle;
 import Enums.Direction;
-import Enums.GravityMovement;
 import GUI.GameView;
 import GUI.Popup;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -44,6 +45,8 @@ public class AlchemyEngine extends Application {
     private ArrayList<Element> elements = new ArrayList<>();
     private final ArrayList<Element> elementsToAdd = new ArrayList<>();
     private final ArrayList<Element> elementsToRemove = new ArrayList<>();
+
+    public static ArrayList<Class<? extends Fluid>> buoyancyList = new ArrayList<>(Arrays.asList(Water.class, Sand.class));       //Lightest to heaviest
 
     //Data
     private boolean isSaved = true;
@@ -101,7 +104,16 @@ public class AlchemyEngine extends Application {
 
             for (Element element : elementsClone) {
                 if (element.update()) {
-                    ArrayList<Element> collided = detectCollision(element.getPosition(), element.getFilter(), element.getCollisionCheckStyle());
+                    if (element.getCollisionCheckStyle() == CollisionCheckStyle.NONE) continue;
+
+                    ArrayList<Element> collided;
+                    if (getElementsUnder(Fluid.class).contains(element.getClass())) {
+                        Fluid castedElement = (Fluid) element;
+                        collided = detectCollision(castedElement, element.getFilter(), element.getCollisionCheckStyle());
+                    } else {
+                        collided = detectCollision(element.getPosition(), element.getFilter(), element.getCollisionCheckStyle());
+                    }
+
                     if (!collided.isEmpty()) {
                         if (!element.collide(collided)) {
                             element.draw(graphics);
@@ -131,7 +143,7 @@ public class AlchemyEngine extends Application {
         elementsToRemove.clear();
     }
 
-    public ArrayList<Element> detectCollision(Point2D.Double origin, List<Class<? extends Element>> filter, CollisionCheckStyle style) {
+    public ArrayList<Element> detectCollision(Point2D.Double origin, Fluid fluid, List<Class<? extends Element>> filter, CollisionCheckStyle style) {
         ArrayList<Element> collided = new ArrayList<>();
 
         //NONE
@@ -144,38 +156,46 @@ public class AlchemyEngine extends Application {
             default:
                 break;
             case POINT:
-                collided.addAll(collisionCheck(filter, collided, new ArrayList<>(Collections.singletonList(origin))));
+                collisionCheck(filter, collided, new ArrayList<>(Collections.singletonList(origin)));
                 break;
             case UP:
-                collided.addAll(collisionCheck(origin, filter, collided, Direction.UP));
+                collisionCheck(origin, filter, collided, Direction.UP);
                 break;
             case DOWN:
-                collided.addAll(collisionCheck(origin, filter, collided, Direction.DOWN));
+                collisionCheck(origin, filter, collided, Direction.DOWN);
                 break;
             case LEFT:
-                collided.addAll(collisionCheck(origin, filter, collided, Direction.LEFT));
+                collisionCheck(origin, filter, collided, Direction.LEFT);
                 break;
             case RIGHT:
-                collided.addAll(collisionCheck(origin, filter, collided, Direction.RIGHT));
+                collisionCheck(origin, filter, collided, Direction.RIGHT);
                 break;
             case FULL:
-                collided.addAll(collisionCheck(origin, filter, collided, Direction.UP,
+                collisionCheck(origin, filter, collided, Direction.UP,
                         Direction.DOWN,
                         Direction.LEFT,
-                        Direction.RIGHT));
+                        Direction.RIGHT);
                 break;
             case ROUND:
-                collided.addAll(collisionCheck(origin, filter, collided, new ArrayList<>(Arrays.asList(new Point2D.Double(origin.x + 10, origin.y + 10),
+                collisionCheck(origin, filter, collided, new ArrayList<>(Arrays.asList(new Point2D.Double(origin.x + 10, origin.y + 10),
                                 new Point2D.Double(origin.x + 10, origin.y - 10),
                                 new Point2D.Double(origin.x - 10, origin.y + 10),
                                 new Point2D.Double(origin.x - 10, origin.y - 10))),
                         Direction.UP,
                         Direction.DOWN,
                         Direction.LEFT,
-                        Direction.RIGHT));
+                        Direction.RIGHT);
                 break;
             case GRAVITY_FIRST:
-                collisionCheck(origin, filter, collided, new ArrayList<>(Collections.singletonList(new Point2D.Double(origin.x, origin.y - 10))));
+                Element castedFluid = (Element) fluid;
+                Point2D.Double position = castedFluid.getPosition();
+                collisionCheck(position, filter, collided, new ArrayList<>(Collections.singletonList(new Point2D.Double(position.x, position.y - 10))));
+
+                if (collided.size()== 1) {
+                    Element otherElement = collided.get(0);
+                    if (buoyancyList.contains(otherElement.getClass())) buoyancyTest(fluid, (Fluid) otherElement);
+                }
+
                 break;
             case GRAVITY_SECOND:
                 break;
@@ -183,6 +203,15 @@ public class AlchemyEngine extends Application {
 
         return collided;
     }
+
+    public ArrayList<Element> detectCollision(Point2D.Double origin, List<Class<? extends Element>> filter, CollisionCheckStyle style) {
+        return detectCollision(origin, null, filter, style);
+    }
+
+    public ArrayList<Element> detectCollision(Fluid fluid, List<Class<? extends Element>> filter, CollisionCheckStyle style) {
+        return detectCollision(null, fluid, filter, style);
+    }
+
 
     private ArrayList<Element> collisionCheck(List<Class<? extends Element>> filter, ArrayList<Element> collisions, ArrayList<Point2D.Double> points) {
         for (Element element : elements) {
@@ -227,62 +256,24 @@ public class AlchemyEngine extends Application {
         return collisionCheck(filter, collisions, points);
     }
 
-    //Water
-    public GravityMovement moveFluid(Element fluid, int allowedDistance) {
-//        double height = fluid.getPosition().y;
-//        double maxLeft = 0d;
-//        double maxRight = 0d;
-//        double minX = allowedDistance;
-//
-//        for (Element element : elements) {                                              //Test if element is not itself
-//            if (element == fluid) {
-//                continue;
-//            }
-//
-//            double otherHeight = element.getPosition().y;
-//            if (height - otherHeight <= 5 && height - otherHeight >= 0) {               //Check deltaY
-//                double deltaX = element.getPosition().x - fluid.getPosition().x;        //Check deltaX
-//
-//                if (Math.abs(deltaX) <= allowedDistance) {
-//                    if (Math.abs(deltaX) < minX) {                                      //Check minX
-//                        minX = Math.abs(deltaX);
-//                    }
-//
-//                    if (deltaX < maxLeft) {                                             //Check maxes
-//                        maxLeft = deltaX;
-//                    } else if (deltaX > maxRight) {
-//                        maxRight = deltaX;
-//                    }
-//                }
-//            }
-//        }
-//
-//        if (minX <= 10) {
-//            if (maxLeft == 0 && maxRight == 0) {
-//                return FluidMovement.BLOCKED;
-//            } else if (Math.abs(maxLeft) < maxRight) {
-//                return FluidMovement.LEFT;
-//            } else if (Math.abs(maxLeft) > maxRight) {
-//                return FluidMovement.RIGHT;
-//            } else {
-//                Random random = new Random();
-//                if (random.nextBoolean()) {
-//                    return FluidMovement.LEFT;
-//                } else {
-//                    return FluidMovement.RIGHT;
-//                }
-//            }
-//        } else {
-//            return FluidMovement.DOWN;
-//        }
+    private void buoyancyTest(Fluid fluid, Fluid otherFluid) {
+        if (buoyancyList.indexOf(fluid.getClass()) > buoyancyList.indexOf(otherFluid.getClass())) {
+            Element castedFluid = (Element) fluid;
+            Element castedOtherFluid = (Element) otherFluid;
+            Point2D.Double tempPosition = castedFluid.getPosition();
 
+            castedFluid.setPosition(castedOtherFluid.getPosition());
 
-
-        return GravityMovement.BLOCKED;
-    }
-
-    public GravityMovement moveFluid(Element fluid) {
-        return moveFluid(fluid, 70);
+            while (true) {
+                ArrayList<Element> collisions = collisionCheck(new ArrayList<>(), new ArrayList<>(), new ArrayList<>(Collections.singletonList(tempPosition)));
+                if (!collisions.isEmpty()) {
+                    tempPosition.setLocation(tempPosition.x, tempPosition.y + 10);
+                } else {
+                    castedOtherFluid.setPosition(tempPosition);
+                    break;
+                }
+            }
+        }
     }
 
     //Element
@@ -533,7 +524,7 @@ public class AlchemyEngine extends Application {
 
     public void quit() {
         if (elements.isEmpty()) {
-            try (FileWriter fileWriter = new FileWriter("src/Engine/lastSavePath.txt")) {
+            try (FileWriter fileWriter = new FileWriter("src/Engine/Saving/lastSavePath.txt")) {
                 fileWriter.write("");
             } catch (IOException e) {
                 e.printStackTrace();
@@ -566,7 +557,7 @@ public class AlchemyEngine extends Application {
     }
 
     public ArrayList<Class<? extends Element>> getElementsUnder(Class<? extends Elements> type) {
-        ArrayList<Class<? extends Element>> allElements = new ArrayList<>(Arrays.asList(Fire.class, Stone.class, Water.class, Wood.class));
+        ArrayList<Class<? extends Element>> allElements = new ArrayList<>(Arrays.asList(Stone.class, Wood.class, Sand.class, Water.class, Fire.class));
         ArrayList<Class<? extends Element>> remainingElements = new ArrayList<>();
 
         if (type == Elements.class) {

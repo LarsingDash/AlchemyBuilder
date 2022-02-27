@@ -19,7 +19,7 @@ public class Fire extends Element implements Gas {
     }
 
     public Fire(AlchemyEngine engine, Point2D.Double customStartingPoint, int customLifespan) {
-        super(engine, CollisionCheckStyle.UP, "fire", Color.RED, false, customLifespan);
+        super(engine, CollisionCheckStyle.UP, Color.RED, false, customLifespan);
         setPosition(customStartingPoint);
     }
 

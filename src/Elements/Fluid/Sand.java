@@ -15,7 +15,7 @@ public class Sand extends Element implements Fluid {
     public Sand() {this(null);}
 
     public Sand(AlchemyEngine engine) {
-        super(engine, CollisionCheckStyle.GRAVITY_FIRST, "water", Color.YELLOW, false, 0);
+        super(engine, CollisionCheckStyle.GRAVITY_FIRST, Color.YELLOW, false, 0);
     }
 
     @Override

@@ -11,7 +11,7 @@ public class Stone extends Element implements Block {
     public Stone() {this(null);}
 
     public Stone(AlchemyEngine engine) {
-        super(engine, CollisionCheckStyle.NONE, "stone", Color.GRAY, false, 0);
+        super(engine, CollisionCheckStyle.NONE, Color.GRAY, false, 0);
     }
 
     @Override

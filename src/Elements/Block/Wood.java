@@ -14,7 +14,7 @@ public class Wood extends Element implements Block {
     public Wood() {this(null);}
 
     public Wood(AlchemyEngine engine) {
-        super(engine, CollisionCheckStyle.NONE, "wood", Color.decode("#a15b00"), true, 0);
+        super(engine, CollisionCheckStyle.NONE, Color.decode("#a15b00"), true, 0);
     }
 
     @Override

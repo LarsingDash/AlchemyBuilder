@@ -18,7 +18,6 @@ public abstract class Element implements Cloneable, Elements {
     //Properties
     private Point2D.Double position;
     private CollisionCheckStyle collisionCheckStyle;
-    private final String name;
     private Color color;
     private List<Class<? extends Element>> filter;
 
@@ -32,14 +31,13 @@ public abstract class Element implements Cloneable, Elements {
     private int burnCount = 0;
 
     //Constructors
-    public Element(AlchemyEngine engine, CollisionCheckStyle collisionCheckStyle, String name, Color color, boolean isFlammable, int lifespan) {
+    public Element(AlchemyEngine engine, CollisionCheckStyle collisionCheckStyle, Color color, boolean isFlammable, int lifespan) {
         //Engine
         this.engine = engine;
 
         //Properties
         this.position = new Point2D.Double(0,0);
         this.collisionCheckStyle = collisionCheckStyle;
-        this.name = name;
         this.color = color;
 
         //Lifespan
@@ -134,10 +132,6 @@ public abstract class Element implements Cloneable, Elements {
         this.collisionCheckStyle = collisionCheckStyle;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public Color getColor() {
         return color;
     }
@@ -174,7 +168,7 @@ public abstract class Element implements Cloneable, Elements {
 
     @Override
     public String toString() {
-        return name;
+        return this.getClass().getName();
     }
 
     public Element clone() {
