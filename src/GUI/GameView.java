@@ -117,12 +117,7 @@ public class GameView extends BorderPane {
                             element.setEngine(engine);
                             element.setPosition(new Point2D.Double(shiftHor + amount * i, shiftVer));
 
-                            if (element.getClass().getName().equals("Elements.Clear")) {
-                                engine.removeElement(element.getPosition());
-                                System.out.println("do we even use this?");
-                            } else {
-                                engine.addElement(element);
-                            }
+                            engine.addElement(element);
                         }
                     } else {
                         if (verStep < 0) {
@@ -131,7 +126,7 @@ public class GameView extends BorderPane {
 
                         for (int i = 0; i < Math.abs(verStep); i++) {
                             Element element = selectedButton.getElement().newInstance();
-                            
+
                             element.setEngine(engine);
                             element.setPosition(new Point2D.Double(shiftHor, shiftVer + amount * i));
                             engine.addElement(element);
@@ -195,7 +190,7 @@ public class GameView extends BorderPane {
                     }
                 }
             } else if (lastMouseEvent.isSecondaryButtonDown() && !isShiftDown) {
-                engine.removeElement(new Point2D.Double(lastMouseEvent.getX(), lastMouseEvent.getY()));
+                engine.removeAtPoint(new Point2D.Double(lastMouseEvent.getX(), lastMouseEvent.getY()));
             }
         }
     }

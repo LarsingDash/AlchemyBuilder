@@ -100,31 +100,29 @@ public class AlchemyEngine extends Application {
         elementsToAdd.clear();
 
         if (!gameView.isShiftDown()) {
-            ArrayList<Element> elementsClone = new ArrayList<>(elements);
+            for (Element element : elements) {
+                ArrayList<Element> collided;
+                if (getElementsUnder(Fluid.class).contains(element.getClass())) {
+                    Fluid castedElement = (Fluid) element;
+                    collided = collisionCheck(castedElement, element.getFilter(), element.getCollisionCheckStyle());
+                } else {
+                    collided = collisionCheck(element.getPosition(), element.getFilter(), element.getCollisionCheckStyle());
+                }
 
-            for (Element element : elementsClone) {
-                if (element.update()) {
+                if (!collided.isEmpty()) {
                     if (element.getCollisionCheckStyle() == CollisionCheckStyle.NONE) continue;
-
-                    ArrayList<Element> collided;
-                    if (getElementsUnder(Fluid.class).contains(element.getClass())) {
-                        Fluid castedElement = (Fluid) element;
-                        collided = collisionCheck(castedElement, element.getFilter(), element.getCollisionCheckStyle());
-                    } else {
-                        collided = collisionCheck(element.getPosition(), element.getFilter(), element.getCollisionCheckStyle());
-                    }
-
-                    if (!collided.isEmpty()) {
-                        if (!element.collide(collided)) {
-                            element.draw(graphics);
-                            elements.remove(element);
-                            elementsToRemove.add(element);
+                    
+                    if (element.collide(collided)) {
+                        if (!element.update()) {
+                            removeElement(element);
                         }
+                    } else {
+                        removeElement(element);
                     }
                 } else {
-                    element.draw(graphics);
-                    elements.remove(element);
-                    elementsToRemove.add(element);
+                    if (!element.update()) {
+                        removeElement(element);
+                    }
                 }
             }
         }
@@ -140,10 +138,13 @@ public class AlchemyEngine extends Application {
         for (Element element : elementsToRemove) {
             element.draw(graphics);
         }
+        elements.removeAll(elementsToRemove);
         elementsToRemove.clear();
     }
 
-    public ArrayList<Element> collisionCheck(Point2D.Double origin, Fluid fluid, List<Class<? extends Element>> filter, CollisionCheckStyle style) {
+    //Collision
+    public ArrayList<Element> collisionCheck(Point2D.Double origin, Fluid fluid, List<Class<? extends
+            Element>> filter, CollisionCheckStyle style) {
         ArrayList<Element> collided = new ArrayList<>();
 
         //NONE
@@ -191,7 +192,7 @@ public class AlchemyEngine extends Application {
                 Point2D.Double position = castedFluid.getPosition();
                 detectCollision(position, filter, collided, new ArrayList<>(Collections.singletonList(new Point2D.Double(position.x, position.y - 10))));
 
-                if (collided.size()== 1) {
+                if (collided.size() == 1) {
                     Element otherElement = collided.get(0);
                     if (buoyancyList.contains(otherElement.getClass())) buoyancyTest(fluid, (Fluid) otherElement);
                 }
@@ -204,15 +205,18 @@ public class AlchemyEngine extends Application {
         return collided;
     }
 
-    public ArrayList<Element> collisionCheck(Point2D.Double origin, List<Class<? extends Element>> filter, CollisionCheckStyle style) {
+    public ArrayList<Element> collisionCheck(Point2D.Double origin, List<Class<? extends
+            Element>> filter, CollisionCheckStyle style) {
         return collisionCheck(origin, null, filter, style);
     }
 
-    public ArrayList<Element> collisionCheck(Fluid fluid, List<Class<? extends Element>> filter, CollisionCheckStyle style) {
+    public ArrayList<Element> collisionCheck(Fluid fluid, List<Class<? extends
+            Element>> filter, CollisionCheckStyle style) {
         return collisionCheck(null, fluid, filter, style);
     }
 
-    private void detectCollision(List<Class<? extends Element>> filter, ArrayList<Element> collisions, ArrayList<Point2D.Double> points) {
+    private void detectCollision(List<Class<? extends
+            Element>> filter, ArrayList<Element> collisions, ArrayList<Point2D.Double> points) {
         for (Element element : elements) {
             if (filter.contains(element.getClass())) continue;
 
@@ -227,11 +231,13 @@ public class AlchemyEngine extends Application {
         }
     }
 
-    private void detectCollision(Point2D.Double origin, List<Class<? extends Element>> filter, ArrayList<Element> collisions, Direction... directions) {
+    private void detectCollision(Point2D.Double origin, List<Class<? extends
+            Element>> filter, ArrayList<Element> collisions, Direction... directions) {
         detectCollision(origin, filter, collisions, new ArrayList<>(), directions);
     }
 
-    private void detectCollision(Point2D.Double origin, List<Class<? extends Element>> filter, ArrayList<Element> collisions, ArrayList<Point2D.Double> points, Direction... directions) {
+    private void detectCollision(Point2D.Double origin, List<Class<? extends
+            Element>> filter, ArrayList<Element> collisions, ArrayList<Point2D.Double> points, Direction... directions) {
         for (Direction direction : directions) {
             switch (direction) {
                 case UP:
@@ -296,7 +302,12 @@ public class AlchemyEngine extends Application {
         }
     }
 
-    public void removeElement(Point2D.Double position) {
+    public void removeElement(Element element) {
+        element.draw(graphics);
+        elementsToRemove.add(element);
+    }
+
+    public void removeAtPoint(Point2D.Double position) {
         elements.removeIf(element -> element.getPosition().distance(position) < 10);
         isSaved = false;
     }
@@ -347,7 +358,8 @@ public class AlchemyEngine extends Application {
         }
     }
 
-    private int horizontalDistanceCheck(Point2D.Double origin, boolean isLeft, List<Class<? extends Element>> filter, Point2D.Double blindSpot) {
+    private int horizontalDistanceCheck(Point2D.Double origin, boolean isLeft, List<Class<? extends Element>>
+            filter, Point2D.Double blindSpot) {
         int amount = 10;
         if (!isLeft) {
             amount *= -1;
