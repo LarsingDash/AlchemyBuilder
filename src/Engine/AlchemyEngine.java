@@ -111,16 +111,16 @@ public class AlchemyEngine extends Application {
 
                 if (!collided.isEmpty()) {
                     if (element.getCollisionCheckStyle() == CollisionCheckStyle.NONE) continue;
-                    
+
                     if (element.collide(collided)) {
-                        if (!element.update()) {
+                        if (element.update()) {
                             removeElement(element);
                         }
                     } else {
                         removeElement(element);
                     }
                 } else {
-                    if (!element.update()) {
+                    if (element.update()) {
                         removeElement(element);
                     }
                 }
@@ -143,8 +143,7 @@ public class AlchemyEngine extends Application {
     }
 
     //Collision
-    public ArrayList<Element> collisionCheck(Point2D.Double origin, Fluid fluid, List<Class<? extends
-            Element>> filter, CollisionCheckStyle style) {
+    public ArrayList<Element> collisionCheck(Point2D.Double origin, Fluid fluid, List<Class<? extends Element>> filter, CollisionCheckStyle style) {
         ArrayList<Element> collided = new ArrayList<>();
 
         //NONE
@@ -172,30 +171,20 @@ public class AlchemyEngine extends Application {
                 detectCollision(origin, filter, collided, Direction.RIGHT);
                 break;
             case FULL:
-                detectCollision(origin, filter, collided, Direction.UP,
-                        Direction.DOWN,
-                        Direction.LEFT,
-                        Direction.RIGHT);
+                detectCollision(origin, filter, collided, Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT);
                 break;
             case ROUND:
-                detectCollision(origin, filter, collided, new ArrayList<>(Arrays.asList(new Point2D.Double(origin.x + 10, origin.y + 10),
-                                new Point2D.Double(origin.x + 10, origin.y - 10),
-                                new Point2D.Double(origin.x - 10, origin.y + 10),
-                                new Point2D.Double(origin.x - 10, origin.y - 10))),
-                        Direction.UP,
-                        Direction.DOWN,
-                        Direction.LEFT,
-                        Direction.RIGHT);
+                detectCollision(origin, filter, collided, new ArrayList<>(Arrays.asList(new Point2D.Double(origin.x + 10, origin.y + 10), new Point2D.Double(origin.x + 10, origin.y - 10), new Point2D.Double(origin.x - 10, origin.y + 10), new Point2D.Double(origin.x - 10, origin.y - 10))), Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT);
                 break;
             case GRAVITY_FIRST:
                 Element castedFluid = (Element) fluid;
                 Point2D.Double position = castedFluid.getPosition();
                 detectCollision(position, filter, collided, new ArrayList<>(Collections.singletonList(new Point2D.Double(position.x, position.y - 10))));
 
-                if (collided.size() == 1) {
-                    Element otherElement = collided.get(0);
-                    if (buoyancyList.contains(otherElement.getClass())) buoyancyTest(fluid, (Fluid) otherElement);
-                }
+//                if (collided.size() == 1) {
+//                    Element otherElement = collided.get(0);
+//                    if (buoyancyList.contains(otherElement.getClass())) buoyancyTest(fluid, (Fluid) otherElement);
+//                }
 
                 break;
             case GRAVITY_SECOND:
@@ -205,19 +194,17 @@ public class AlchemyEngine extends Application {
         return collided;
     }
 
-    public ArrayList<Element> collisionCheck(Point2D.Double origin, List<Class<? extends
-            Element>> filter, CollisionCheckStyle style) {
+    public ArrayList<Element> collisionCheck(Point2D.Double origin, List<Class<? extends Element>> filter, CollisionCheckStyle style) {
         return collisionCheck(origin, null, filter, style);
     }
 
-    public ArrayList<Element> collisionCheck(Fluid fluid, List<Class<? extends
-            Element>> filter, CollisionCheckStyle style) {
+    public ArrayList<Element> collisionCheck(Fluid fluid, List<Class<? extends Element>> filter, CollisionCheckStyle style) {
         return collisionCheck(null, fluid, filter, style);
     }
 
-    private void detectCollision(List<Class<? extends
-            Element>> filter, ArrayList<Element> collisions, ArrayList<Point2D.Double> points) {
+    private void detectCollision(List<Class<? extends Element>> filter, ArrayList<Element> collisions, ArrayList<Point2D.Double> points) {
         for (Element element : elements) {
+            //fixme
             if (filter.contains(element.getClass())) continue;
 
             if (points.contains(element.getPosition())) {
@@ -231,13 +218,11 @@ public class AlchemyEngine extends Application {
         }
     }
 
-    private void detectCollision(Point2D.Double origin, List<Class<? extends
-            Element>> filter, ArrayList<Element> collisions, Direction... directions) {
+    private void detectCollision(Point2D.Double origin, List<Class<? extends Element>> filter, ArrayList<Element> collisions, Direction... directions) {
         detectCollision(origin, filter, collisions, new ArrayList<>(), directions);
     }
 
-    private void detectCollision(Point2D.Double origin, List<Class<? extends
-            Element>> filter, ArrayList<Element> collisions, ArrayList<Point2D.Double> points, Direction... directions) {
+    private void detectCollision(Point2D.Double origin, List<Class<? extends Element>> filter, ArrayList<Element> collisions, ArrayList<Point2D.Double> points, Direction... directions) {
         for (Direction direction : directions) {
             switch (direction) {
                 case UP:
@@ -344,8 +329,8 @@ public class AlchemyEngine extends Application {
 
                     try {
                         Element element = elementClass.newInstance();
-                        element.setPosition(currentPosition);
                         element.setEngine(this);
+                        element.setPosition(currentPosition);
                         if (!addElement(element)) {
                             elementsToAdd.clear();
                             break all;
@@ -358,8 +343,7 @@ public class AlchemyEngine extends Application {
         }
     }
 
-    private int horizontalDistanceCheck(Point2D.Double origin, boolean isLeft, List<Class<? extends Element>>
-            filter, Point2D.Double blindSpot) {
+    private int horizontalDistanceCheck(Point2D.Double origin, boolean isLeft, List<Class<? extends Element>> filter, Point2D.Double blindSpot) {
         int amount = 10;
         if (!isLeft) {
             amount *= -1;

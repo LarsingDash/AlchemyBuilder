@@ -31,10 +31,7 @@ public abstract class Element implements Cloneable, Elements {
     private int burnCount = 0;
 
     //Constructors
-    public Element(AlchemyEngine engine, CollisionCheckStyle collisionCheckStyle, Color color, boolean isFlammable, int lifespan) {
-        //Engine
-        this.engine = engine;
-
+    public Element(CollisionCheckStyle collisionCheckStyle, Color color, boolean isFlammable, int lifespan) {
         //Properties
         this.position = new Point2D.Double(0,0);
         this.collisionCheckStyle = collisionCheckStyle;
@@ -45,14 +42,12 @@ public abstract class Element implements Cloneable, Elements {
 
         //Fire
         this.isFlammable = isFlammable;
-
-        init();
     }
 
     //Behavioral
-    public boolean update() {
+    public boolean update() {       //Return true if killed
         //Check for worldBorder
-        if (position.x <= 0 || position.x >= 1520 || position.y <= 0 || position.y >= 1080) return false;   //WorldBorder
+        if (position.x <= 0 || position.x >= 1520 || position.y <= 0 || position.y >= 1080) return true;   //WorldBorder
 
         //Burn
         if (isFlammable && isLit) {
@@ -61,7 +56,7 @@ public abstract class Element implements Cloneable, Elements {
 
             //Kill
             if (burnCount == 30) {
-                return false;
+                return true;
             }
         }
 
@@ -70,14 +65,14 @@ public abstract class Element implements Cloneable, Elements {
             age++;
 
             if (age == lifespan) {
-                return false;
+                return true;
             }
         }
 
         //Behavior
         behave();
 
-        return !(position.x >= 1520) && !(position.x <= 0) && !(position.y >= 1080) && !(position.y <= 0);
+        return position.x >= 1520 || position.x <= 0 || position.y >= 1080 || position.y <= 0;
     }
 
     abstract public void behave();
@@ -114,6 +109,7 @@ public abstract class Element implements Cloneable, Elements {
 
     public void setEngine(AlchemyEngine engine) {
         this.engine = engine;
+        init();
     }
 
     public Point2D.Double getPosition() {

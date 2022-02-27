@@ -1,7 +1,6 @@
 package Elements.Fluid;
 
 import Elements.Element;
-import Engine.AlchemyEngine;
 import Enums.CollisionCheckStyle;
 import Enums.GravityMovement;
 
@@ -12,10 +11,8 @@ public class Sand extends Element implements Fluid {
     private int sleepClock = -1;
     private GravityMovement movement = GravityMovement.DOWN;
 
-    public Sand() {this(null);}
-
-    public Sand(AlchemyEngine engine) {
-        super(engine, CollisionCheckStyle.GRAVITY_FIRST, Color.YELLOW, false, 0);
+    public Sand() {
+        super(CollisionCheckStyle.GRAVITY_FIRST, Color.YELLOW, false, 0);
     }
 
     @Override

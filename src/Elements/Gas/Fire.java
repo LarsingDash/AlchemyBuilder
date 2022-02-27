@@ -1,7 +1,6 @@
 package Elements.Gas;
 
 import Elements.Element;
-import Engine.AlchemyEngine;
 import Enums.CollisionCheckStyle;
 
 import java.awt.*;
@@ -11,15 +10,11 @@ import java.util.Collections;
 
 public class Fire extends Element implements Gas {
     public Fire() {
-        this(null);
+        this(new Point2D.Double(0, 0), 15);
     }
 
-    public Fire(AlchemyEngine engine) {
-        this(engine, new Point2D.Double(0, 0), 30);
-    }
-
-    public Fire(AlchemyEngine engine, Point2D.Double customStartingPoint, int customLifespan) {
-        super(engine, CollisionCheckStyle.UP, Color.RED, false, customLifespan);
+    public Fire(Point2D.Double customStartingPoint, int customLifespan) {
+        super(CollisionCheckStyle.UP, Color.RED, false, customLifespan);
         setPosition(customStartingPoint);
     }
 

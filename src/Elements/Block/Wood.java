@@ -2,7 +2,6 @@ package Elements.Block;
 
 import Elements.Element;
 import Elements.Gas.Fire;
-import Engine.AlchemyEngine;
 import Enums.CollisionCheckStyle;
 
 import java.awt.*;
@@ -11,10 +10,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class Wood extends Element implements Block {
-    public Wood() {this(null);}
-
-    public Wood(AlchemyEngine engine) {
-        super(engine, CollisionCheckStyle.NONE, Color.decode("#a15b00"), true, 0);
+    public Wood() {
+        super(CollisionCheckStyle.NONE, Color.decode("#a15b00"), true, 0);
     }
 
     @Override
@@ -28,7 +25,9 @@ public class Wood extends Element implements Block {
             }
 
             if (getBurnCount() == 20) {
-                getEngine().addElement(new Fire(getEngine(), new Point2D.Double(getPosition().x, getPosition().y + 10), 7));
+                Fire fire = new Fire(new Point2D.Double(getPosition().x, getPosition().y + 10), 7);
+                fire.setEngine(getEngine());
+                getEngine().addElement(fire);
             }
         }
     }
