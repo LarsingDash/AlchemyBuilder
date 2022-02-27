@@ -22,8 +22,6 @@ public class Sand extends Element implements Fluid {
 
         if (movement == GravityMovement.DOWN) {
             getPosition().setLocation(getPosition().x, getPosition().y - 10);
-        } else {
-            movement = GravityMovement.DOWN;
         }
     }
 
@@ -48,5 +46,10 @@ public class Sand extends Element implements Fluid {
     @Override
     public void initFilter() {
         setFilter(new ArrayList<>());
+    }
+
+    @Override
+    public void setMovement(GravityMovement movement) {
+        this.movement = movement;
     }
 }

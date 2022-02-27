@@ -36,16 +36,12 @@ public class Water extends Element implements Fluid {
             default:
                 setColor(Color.BLUE);
         }
-
-        if (movement != GravityMovement.DOWN) {
-            movement = GravityMovement.DOWN;
-        }
     }
 
     @Override
     public boolean collide(ArrayList<Element> collided) {
         for (Element other : collided) {
-            if (collided.get(0).getClass().getName().equals("Elements.Fluid.Water")) {
+            if (collided.get(0).getClass() == Water.class) {
                 Water otherWater = (Water) other;
                 if (otherWater.movement == GravityMovement.BLOCKED) {
                     this.movement = GravityMovement.BLOCKED;
@@ -65,10 +61,7 @@ public class Water extends Element implements Fluid {
         setFilter(new ArrayList<>());
     }
 
-    public GravityMovement getMovement() {
-        return movement;
-    }
-
+    @Override
     public void setMovement(GravityMovement movement) {
         this.movement = movement;
     }

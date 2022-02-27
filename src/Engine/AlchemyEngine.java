@@ -11,6 +11,7 @@ import Elements.Gas.Fire;
 import Engine.Saving.GameSave;
 import Enums.CollisionCheckStyle;
 import Enums.Direction;
+import Enums.GravityMovement;
 import GUI.GameView;
 import GUI.Popup;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -101,10 +102,12 @@ public class AlchemyEngine extends Application {
 
         if (!gameView.isShiftDown()) {
             for (Element element : elements) {
+                boolean isFluid = false;
                 ArrayList<Element> collided;
                 if (getElementsUnder(Fluid.class).contains(element.getClass())) {
                     Fluid castedElement = (Fluid) element;
                     collided = collisionCheck(castedElement, element.getFilter(), element.getCollisionCheckStyle());
+                    isFluid = true;
                 } else {
                     collided = collisionCheck(element.getPosition(), element.getFilter(), element.getCollisionCheckStyle());
                 }
@@ -120,6 +123,11 @@ public class AlchemyEngine extends Application {
                         removeElement(element);
                     }
                 } else {
+                    if (isFluid) {
+                        Fluid castedElement = (Fluid) element;
+                        castedElement.setMovement(GravityMovement.DOWN);
+                    }
+
                     if (element.update()) {
                         removeElement(element);
                     }
@@ -181,10 +189,10 @@ public class AlchemyEngine extends Application {
                 Point2D.Double position = castedFluid.getPosition();
                 detectCollision(position, filter, collided, new ArrayList<>(Collections.singletonList(new Point2D.Double(position.x, position.y - 10))));
 
-//                if (collided.size() == 1) {
-//                    Element otherElement = collided.get(0);
-//                    if (buoyancyList.contains(otherElement.getClass())) buoyancyTest(fluid, (Fluid) otherElement);
-//                }
+                if (collided.size() == 1) {
+                    Element otherElement = collided.get(0);
+                    if (buoyancyList.contains(otherElement.getClass())) buoyancyTest(fluid, (Fluid) otherElement);
+                }
 
                 break;
             case GRAVITY_SECOND:
