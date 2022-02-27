@@ -3,7 +3,7 @@ package Engine;
 import Elements.*;
 import Engine.Saving.GameSave;
 import Enums.CollisionCheckStyle;
-import Enums.FluidMovement;
+import Enums.GravityMovement;
 import Enums.Direction;
 import GUI.GameView;
 import GUI.Popup;
@@ -25,7 +25,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
-//todo change screen size to match 5 pixel shift in element rendering
 public class AlchemyEngine extends Application {
     public static void main(String[] args) {
         AlchemyEngine.launch();
@@ -136,7 +135,7 @@ public class AlchemyEngine extends Application {
             return collided;
         }
 
-        //Decision tree todo fluid
+        //Decision tree
         switch (style) {
             default:
                 break;
@@ -171,7 +170,10 @@ public class AlchemyEngine extends Application {
                         Direction.LEFT,
                         Direction.RIGHT));
                 break;
-            case FLUID:
+            case GRAVITY_FIRST:
+                collisionCheck(origin, filter, collided, new ArrayList<>(Collections.singletonList(new Point2D.Double(origin.x, origin.y - 10))));
+                break;
+            case GRAVITY_SECOND:
                 break;
         }
 
@@ -222,7 +224,7 @@ public class AlchemyEngine extends Application {
     }
 
     //Water
-    public FluidMovement moveFluid(Element fluid, int allowedDistance) {
+    public GravityMovement moveFluid(Element fluid, int allowedDistance) {
 //        double height = fluid.getPosition().y;
 //        double maxLeft = 0d;
 //        double maxRight = 0d;
@@ -270,21 +272,13 @@ public class AlchemyEngine extends Application {
 //            return FluidMovement.DOWN;
 //        }
 
-        allowedDistance = 20;
 
-//        List<Class<? extends Element>> filter = Collections.singletonList(Water.class);
-        List<Class<? extends Element>> filter = new ArrayList<>();
-        System.out.println(horizontalDistanceCheck(fluid.getPosition(), true, filter, fluid.getPosition()));
-//        boolean leftPossible = horizontalDistanceCheck(fluid.getPosition(), true, filter, false) >= allowedDistance;
-//        boolean rightPossible = horizontalDistanceCheck(fluid.getPosition(), false, filter, false) >= allowedDistance;
 
-//        System.out.println(leftPossible + " " + rightPossible);
-
-        return FluidMovement.BLOCKED;
+        return GravityMovement.BLOCKED;
     }
 
-    public FluidMovement moveFluid(Element fluid) {
-        return moveFluid(fluid, 75);
+    public GravityMovement moveFluid(Element fluid) {
+        return moveFluid(fluid, 70);
     }
 
     //Element

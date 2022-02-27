@@ -9,5 +9,6 @@ public enum CollisionCheckStyle {
     RIGHT,
     FULL,
     ROUND,
-    FLUID
+    GRAVITY_FIRST,
+    GRAVITY_SECOND
 }

@@ -2,16 +2,19 @@ package Elements;
 
 import Engine.AlchemyEngine;
 import Enums.CollisionCheckStyle;
+import Enums.GravityMovement;
 
 import java.awt.*;
 import java.util.ArrayList;
 
 public class Water extends Element {
     private int sleepClock = -1;
+    private GravityMovement movement = GravityMovement.DOWN;
+
     public Water() {this(null);}
 
     public Water(AlchemyEngine engine) {
-        super(engine, CollisionCheckStyle.FLUID, "water", Color.BLUE, false, 0);
+        super(engine, CollisionCheckStyle.GRAVITY_FIRST, "water", Color.BLUE, false, 0);
     }
 
     @Override
@@ -19,7 +22,7 @@ public class Water extends Element {
         sleepClock++;
         if (sleepClock % 2 == 0) return;
 
-        switch (getEngine().moveFluid(this)) {
+        switch (movement) {
             case LEFT:
                 getPosition().setLocation(getPosition().x - 10,getPosition().y);
                 setColor(Color.YELLOW);
@@ -35,16 +38,40 @@ public class Water extends Element {
             default:
                 setColor(Color.RED);
         }
+
+        if (movement != GravityMovement.DOWN) {
+            movement = GravityMovement.DOWN;
+        }
     }
 
     @Override
     public boolean collide(ArrayList<Element> collided) {
-        //todo
-        return false;
+        for (Element other : collided) {
+            if (collided.get(0).getClass().getName().equals("Elements.Water")) {
+                Water otherWater = (Water) other;
+                if (otherWater.movement == GravityMovement.BLOCKED) {
+                    this.movement = GravityMovement.BLOCKED;
+                } else {
+                    this.movement = GravityMovement.DOWN;
+                }
+            } else {
+                movement = GravityMovement.BLOCKED;
+            }
+        }
+
+        return true;
     }
 
     @Override
     public void initFilter() {
         setFilter(new ArrayList<>());
+    }
+
+    public GravityMovement getMovement() {
+        return movement;
+    }
+
+    public void setMovement(GravityMovement movement) {
+        this.movement = movement;
     }
 }

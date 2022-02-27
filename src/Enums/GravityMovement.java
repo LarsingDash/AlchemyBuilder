@@ -1,6 +1,6 @@
 package Enums;
 
-public enum FluidMovement {
+public enum GravityMovement {
     DOWN,
     LEFT,
     RIGHT,

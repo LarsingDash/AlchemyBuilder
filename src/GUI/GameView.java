@@ -263,8 +263,9 @@ public class GameView extends BorderPane {
         Label particleLabel = new Label("Particles");
         ElementButton fire = new ElementButton(toggleGroup, new Fire(engine), "fire");
         ElementButton water = new ElementButton(toggleGroup, new Water(engine), "water");
+        ElementButton sand = new ElementButton(toggleGroup, new Sand(engine), "sand");
 
-        VBox vBox = new VBox(particleLabel, fire, water);
+        VBox vBox = new VBox(particleLabel, fire, water, sand);
         vBox.setSpacing(20);
         return vBox;
     }
