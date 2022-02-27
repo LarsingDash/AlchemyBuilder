@@ -1,12 +1,13 @@
-package Elements;
+package Elements.Block;
 
+import Elements.Element;
 import Engine.AlchemyEngine;
 import Enums.CollisionCheckStyle;
 
 import java.awt.*;
 import java.util.ArrayList;
 
-public class Stone extends Element {
+public class Stone extends Element implements Block {
     public Stone() {this(null);}
 
     public Stone(AlchemyEngine engine) {

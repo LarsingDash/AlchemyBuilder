@@ -1,5 +1,6 @@
-package Elements;
+package Elements.Gas;
 
+import Elements.Element;
 import Engine.AlchemyEngine;
 import Enums.CollisionCheckStyle;
 
@@ -8,7 +9,7 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class Fire extends Element {
+public class Fire extends Element implements Gas {
     public Fire() {
         this(null);
     }

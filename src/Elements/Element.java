@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public abstract class Element implements Cloneable {
+public abstract class Element implements Cloneable, Elements {
     //Engine
     private AlchemyEngine engine;
 

@@ -1,6 +1,11 @@
 package GUI;
 
 import Elements.*;
+import Elements.Block.Stone;
+import Elements.Block.Wood;
+import Elements.Fluid.Sand;
+import Elements.Fluid.Water;
+import Elements.Gas.Fire;
 import Engine.AlchemyEngine;
 import Enums.Direction;
 import javafx.geometry.Pos;

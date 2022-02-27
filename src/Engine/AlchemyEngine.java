@@ -1,10 +1,15 @@
 package Engine;
 
-import Elements.*;
+import Elements.Block.Stone;
+import Elements.Block.Wood;
+import Elements.Element;
+import Elements.Elements;
+import Elements.Fluid.Water;
+import Elements.Gas.Fire;
 import Engine.Saving.GameSave;
 import Enums.CollisionCheckStyle;
-import Enums.GravityMovement;
 import Enums.Direction;
+import Enums.GravityMovement;
 import GUI.GameView;
 import GUI.Popup;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,7 +41,6 @@ public class AlchemyEngine extends Application {
     private final GameView gameView = new GameView(this);
 
     //Elements
-    public static ArrayList<Class<? extends Element>> allElements = new ArrayList<>(Arrays.asList(Fire.class, Stone.class, Water.class, Wood.class));
     private ArrayList<Element> elements = new ArrayList<>();
     private final ArrayList<Element> elementsToAdd = new ArrayList<>();
     private final ArrayList<Element> elementsToRemove = new ArrayList<>();
@@ -78,7 +82,7 @@ public class AlchemyEngine extends Application {
         stage.setScene(new Scene(gameView));
         stage.show();
 
-        try (Scanner fileSearcher = new Scanner("src/Engine/lastSavePath.txt")) {
+        try (Scanner fileSearcher = new Scanner("src/Engine/saving/lastSavePath.txt")) {
             File file = new File(fileSearcher.nextLine());
             try (Scanner fileReader = new Scanner(file)) {
                 if (file.length() > 0) loadSave(true, stage, new File(fileReader.nextLine()));
@@ -471,7 +475,7 @@ public class AlchemyEngine extends Application {
         isSaved = true;
         stage.requestFocus();
 
-        try (FileWriter fileWriter = new FileWriter("src/Engine/lastSavePath.txt")) {
+        try (FileWriter fileWriter = new FileWriter("src/Engine/saving/lastSavePath.txt")) {
             fileWriter.write(file.getAbsolutePath());
         } catch (IOException e) {
             e.printStackTrace();
@@ -555,10 +559,29 @@ public class AlchemyEngine extends Application {
     }
 
     public List<Class<? extends Element>> invertFilter(List<Class<? extends Element>> filter) {
-        ArrayList<Class<? extends Element>> toReturn = new ArrayList<>(allElements);
+        ArrayList<Class<? extends Element>> toReturn = getElementsUnder(Elements.class);
         toReturn.removeAll(filter);
 
         return toReturn;
+    }
+
+    public ArrayList<Class<? extends Element>> getElementsUnder(Class<? extends Elements> type) {
+        ArrayList<Class<? extends Element>> allElements = new ArrayList<>(Arrays.asList(Fire.class, Stone.class, Water.class, Wood.class));
+        ArrayList<Class<? extends Element>> remainingElements = new ArrayList<>();
+
+        if (type == Elements.class) {
+            remainingElements.addAll(allElements);
+            return remainingElements;
+        }
+
+        for (Class<? extends Element> element : allElements) {
+            ArrayList<Class<?>> interfaces = new ArrayList<>(Arrays.asList(element.getInterfaces()));
+            if (interfaces.contains(type)) {
+                remainingElements.add(element);
+            }
+        }
+
+        return remainingElements;
     }
 
     //Getters / Setters

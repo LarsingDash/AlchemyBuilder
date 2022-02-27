@@ -1,5 +1,6 @@
-package Elements;
+package Elements.Fluid;
 
+import Elements.Element;
 import Engine.AlchemyEngine;
 import Enums.CollisionCheckStyle;
 import Enums.GravityMovement;
@@ -7,7 +8,7 @@ import Enums.GravityMovement;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class Water extends Element {
+public class Water extends Element implements Fluid {
     private int sleepClock = -1;
     private GravityMovement movement = GravityMovement.DOWN;
 
@@ -47,7 +48,7 @@ public class Water extends Element {
     @Override
     public boolean collide(ArrayList<Element> collided) {
         for (Element other : collided) {
-            if (collided.get(0).getClass().getName().equals("Elements.Water")) {
+            if (collided.get(0).getClass().getName().equals("Elements.Fluid.Water")) {
                 Water otherWater = (Water) other;
                 if (otherWater.movement == GravityMovement.BLOCKED) {
                     this.movement = GravityMovement.BLOCKED;

@@ -1,5 +1,7 @@
-package Elements;
+package Elements.Block;
 
+import Elements.Element;
+import Elements.Gas.Fire;
 import Engine.AlchemyEngine;
 import Enums.CollisionCheckStyle;
 
@@ -8,7 +10,7 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class Wood extends Element {
+public class Wood extends Element implements Block {
     public Wood() {this(null);}
 
     public Wood(AlchemyEngine engine) {

@@ -1,5 +1,6 @@
-package Elements;
+package Elements.Fluid;
 
+import Elements.Element;
 import Engine.AlchemyEngine;
 import Enums.CollisionCheckStyle;
 import Enums.GravityMovement;
@@ -7,7 +8,7 @@ import Enums.GravityMovement;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class Sand extends Element {
+public class Sand extends Element implements Fluid {
     private int sleepClock = -1;
     private GravityMovement movement = GravityMovement.DOWN;
 
