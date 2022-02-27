@@ -37,7 +37,7 @@ public class Water extends Element implements Fluid {
                 setColor(Color.BLUE);
                 break;
             default:
-                setColor(Color.RED);
+                setColor(Color.BLUE);
         }
 
         if (movement != GravityMovement.DOWN) {

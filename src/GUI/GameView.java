@@ -105,7 +105,6 @@ public class GameView extends BorderPane {
 
                 try {
                     ElementButton selectedButton = (ElementButton) toggleGroup.getSelectedToggle();
-                    Class<?> c = Class.forName(selectedButton.getElement().getClass().getName());
 
                     if (Math.abs(horStep) > Math.abs(verStep)) {
                         if (horStep < 0) {
@@ -113,12 +112,14 @@ public class GameView extends BorderPane {
                         }
 
                         for (int i = 0; i < Math.abs(horStep); i++) {
-                            Element element = (Element) c.newInstance();
+                            Element element = selectedButton.getElement().newInstance();
+
                             element.setEngine(engine);
                             element.setPosition(new Point2D.Double(shiftHor + amount * i, shiftVer));
 
-                            if (c.getName().equals("Elements.Clear")) {
+                            if (element.getClass().getName().equals("Elements.Clear")) {
                                 engine.removeElement(element.getPosition());
+                                System.out.println("do we even use this?");
                             } else {
                                 engine.addElement(element);
                             }
@@ -129,13 +130,14 @@ public class GameView extends BorderPane {
                         }
 
                         for (int i = 0; i < Math.abs(verStep); i++) {
-                            Element element = (Element) c.newInstance();
+                            Element element = selectedButton.getElement().newInstance();
+                            
                             element.setEngine(engine);
                             element.setPosition(new Point2D.Double(shiftHor, shiftVer + amount * i));
                             engine.addElement(element);
                         }
                     }
-                } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+                } catch (InstantiationException | IllegalAccessException e) {
                     e.printStackTrace();
                 }
 
@@ -147,7 +149,7 @@ public class GameView extends BorderPane {
         } else if (mousePressed && isShiftDown) {        //right button
             ElementButton selectedElement = (ElementButton) toggleGroup.getSelectedToggle();
             if (selectedElement != null) {
-                engine.fillElement(new Point2D.Double(mouseEvent.getX(), mouseEvent.getY()), selectedElement.getElement().getClass());
+                engine.fillElement(new Point2D.Double(mouseEvent.getX(), mouseEvent.getY()), selectedElement.getElement());
             }
         }
     }
@@ -157,18 +159,23 @@ public class GameView extends BorderPane {
             if (isMousePressed && lastMouseEvent.getButton() == MouseButton.PRIMARY) {
                 ElementButton selectedButton = (ElementButton) toggleGroup.getSelectedToggle();
                 if (selectedButton != null) {
-                    Element element = selectedButton.getElement().clone();
-
                     hor = AlchemyEngine.roundToTens(lastMouseEvent.getX());
                     ver = AlchemyEngine.roundToTens(lastMouseEvent.getY());
 
                     if (!isShiftDown) {
-                        firstShift = true;
+                        try {
+                            //Place element
+                            Element element = selectedButton.getElement().newInstance();
+                            element.setEngine(engine);
+                            firstShift = true;
 
-                        element.setPosition(new Point2D.Double(hor, ver));
-                        element.init();
+                            element.setPosition(new Point2D.Double(hor, ver));
+                            element.init();
 
-                        engine.addElement(element);
+                            engine.addElement(element);
+                        } catch (InstantiationException | IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
                     } else {
                         //Remember begin of shift
                         if (firstShift) {
@@ -266,9 +273,9 @@ public class GameView extends BorderPane {
     private VBox makeParticleButtons() {
         //Elements
         Label particleLabel = new Label("Particles");
-        ElementButton fire = new ElementButton(toggleGroup, new Fire(engine), "fire");
-        ElementButton water = new ElementButton(toggleGroup, new Water(engine), "water");
-        ElementButton sand = new ElementButton(toggleGroup, new Sand(engine), "sand");
+        ElementButton fire = new ElementButton(toggleGroup, Fire.class, "fire");
+        ElementButton water = new ElementButton(toggleGroup, Water.class, "water");
+        ElementButton sand = new ElementButton(toggleGroup, Sand.class, "sand");
 
         VBox vBox = new VBox(particleLabel, fire, water, sand);
         vBox.setSpacing(20);
@@ -278,11 +285,11 @@ public class GameView extends BorderPane {
     private VBox makeBlockButtons() {
         //Elements
         Label blocksLabel = new Label("Blocks");
-        ElementButton wood = new ElementButton(toggleGroup, new Wood(engine), "wood");
-        ElementButton stone = new ElementButton(toggleGroup, new Stone(engine), "stone");
+        ElementButton wood = new ElementButton(toggleGroup, Wood.class, "wood");
+        ElementButton stone = new ElementButton(toggleGroup, Stone.class, "stone");
 
         VBox vBox = new VBox(blocksLabel, wood, stone);
-                vBox.setSpacing(20);
+        vBox.setSpacing(20);
         return vBox;
     }
 

@@ -9,9 +9,9 @@ import javafx.scene.layout.*;
 import java.io.File;
 
 public class ElementButton extends ToggleButton {
-    private final Element element;
+    private final Class<? extends Element> element;
 
-    public ElementButton(ToggleGroup toggleGroup, Element element, String imageURL) {
+    public ElementButton(ToggleGroup toggleGroup, Class<? extends Element> element, String imageURL) {
         this.setToggleGroup(toggleGroup);
         this.element = element;
 
@@ -19,7 +19,7 @@ public class ElementButton extends ToggleButton {
         setBackground(new Background(new BackgroundImage(new Image(new File("src/resources/" + imageURL + ".png").toURI().toString()), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
     }
 
-    public Element getElement() {
+    public Class<? extends Element> getElement() {
         return element;
     }
 }

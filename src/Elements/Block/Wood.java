@@ -20,7 +20,7 @@ public class Wood extends Element implements Block {
     @Override
     public void behave() {
         if (isLit() && getBurnCount() > 5) {
-            ArrayList<Element> collisionElements = getEngine().detectCollision(getPosition(), getEngine().invertFilter(Collections.singletonList(Wood.class)), CollisionCheckStyle.ROUND);
+            ArrayList<Element> collisionElements = getEngine().collisionCheck(getPosition(), getEngine().invertFilter(Collections.singletonList(Wood.class)), CollisionCheckStyle.ROUND);
             if (!collisionElements.isEmpty()) {
                 for (Element collisionElement : collisionElements) {
                     collisionElement.setLit(true);
