@@ -6,18 +6,18 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import java.awt.geom.Point2D;
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 @JsonDeserialize(as = GameSave.class)
 @SuppressWarnings("unused")
 public class GameSave implements Serializable {
     public GameSave() {
     }
-    private ArrayList<SavablePoint> savedPoints = new ArrayList<>();
+    private LinkedList<SavablePoint> savedPoints = new LinkedList<>();
 
-    private ArrayList<String> savedElements  = new ArrayList<>();
+    private LinkedList<String> savedElements  = new LinkedList<>();
 
-    public GameSave(ArrayList<Element> elements) {
+    public GameSave(LinkedList<Element> elements) {
         for (Element element : elements) {
             Point2D.Double position = element.getPosition();
             savedPoints.add(new SavablePoint(position.x, position.y));
@@ -25,8 +25,8 @@ public class GameSave implements Serializable {
         }
     }
 
-    public ArrayList<Element> getSavedElements(AlchemyEngine engine) {
-        ArrayList<Element> arrayToReturn = new ArrayList<>();
+    public LinkedList<Element> getSavedElements(AlchemyEngine engine) {
+        LinkedList<Element> arrayToReturn = new LinkedList<>();
 
         for (SavablePoint position : savedPoints) {
             try {
@@ -43,19 +43,19 @@ public class GameSave implements Serializable {
         return arrayToReturn;
     }
 
-    public ArrayList<SavablePoint> getSavedPoints() {
+    public LinkedList<SavablePoint> getSavedPoints() {
         return savedPoints;
     }
 
-    public void setSavedPoints(ArrayList<SavablePoint> savedPoints) {
+    public void setSavedPoints(LinkedList<SavablePoint> savedPoints) {
         this.savedPoints = savedPoints;
     }
 
-    public ArrayList<String> getSavedElements() {
+    public LinkedList<String> getSavedElements() {
         return savedElements;
     }
 
-    public void setSavedElements(ArrayList<String> savedElements) {
+    public void setSavedElements(LinkedList<String> savedElements) {
         this.savedElements = savedElements;
     }
 }
