@@ -31,8 +31,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
-public class AlchemyEngine extends Application implements Runnable {
-
+public class AlchemyEngine extends Application {
     public static void main(String[] args) {
         AlchemyEngine.launch();
     }
@@ -43,15 +42,14 @@ public class AlchemyEngine extends Application implements Runnable {
     private final GameView gameView = new GameView(this);
 
     //Elements
-    private LinkedList<Element> elements = new LinkedList<>();
+    private ArrayList<Element> elements = new ArrayList<>();
     private final ArrayList<Element> elementsToAdd = new ArrayList<>();
     private final ArrayList<Element> elementsToRemove = new ArrayList<>();
+
     public static ArrayList<Class<? extends Fluid>> buoyancyList = new ArrayList<>(Arrays.asList(Water.class, Sand.class));       //Lightest to heaviest
 
-    //Engine and Data
+    //Data
     private boolean isSaved = true;
-    private boolean updateAvailable = true;
-    private boolean isWorkingWithElements = false;
 
     //Engine
     @Override
@@ -75,11 +73,7 @@ public class AlchemyEngine extends Application implements Runnable {
             @Override
             public void handle(long now) {
                 if (now - last > (1 / 100d) * 1e9) {
-                    if (updateAvailable) {
-                        Thread calculationThread = new Thread(getEngine());
-                        calculationThread.start();
-                    }
-
+                    update();
                     if (drawToggle) draw();
                     last = now;
                     drawToggle = !drawToggle;
@@ -99,18 +93,14 @@ public class AlchemyEngine extends Application implements Runnable {
         }
     }
 
-    public AlchemyEngine getEngine() {
-        return this;
-    }
-
     private void update() {
-        LinkedList<Element> addAll = new LinkedList<>(getElements());
-        addAll.addAll(elementsToAdd);
-        setElements(addAll);
+        gameView.update();
+
+        elements.addAll(elementsToAdd);
         elementsToAdd.clear();
 
         if (!gameView.isShiftDown()) {                                          //If game is not paused
-            for (Element element : getElements()) {
+            for (Element element : elements) {
                 boolean isFluid = false;
                 LinkedList<Element> collided;
                 if (getElementsUnder(Fluid.class).contains(element.getClass())) {       //Make collided -   FLUID
@@ -147,44 +137,16 @@ public class AlchemyEngine extends Application implements Runnable {
 
     private void draw() {
         gameView.clear(false);
-        gameView.update();
 
-        ArrayList<Element> drawList = new ArrayList<>(getElements());
-        drawList.addAll(elementsToRemove);
-
-        for (Element element : drawList) {
+        for (Element element : elements) {
             element.draw(graphics);
         }
 
-        LinkedList<Element> removeAll = new LinkedList<>(getElements());
-        removeAll.removeAll(elementsToRemove);
-        setElements(removeAll);
-        elementsToRemove.clear();
-    }
-
-    @Override
-    public void run() {
-        updateAvailable = false;
-        update();
-        updateAvailable = true;
-    }
-
-    public synchronized LinkedList<Element> getElements() {
-        while (isWorkingWithElements) {
-            try {
-                wait(10);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        for (Element element : elementsToRemove) {
+            element.draw(graphics);
         }
-        return elements;
-    }
-
-    public synchronized void setElements(LinkedList<Element> elements) {
-        //noinspection UnusedAssignment
-        isWorkingWithElements = true;
-        this.elements = elements;
-        isWorkingWithElements = false;
+        elements.removeAll(elementsToRemove);
+        elementsToRemove.clear();
     }
 
     //Collision
@@ -357,7 +319,7 @@ public class AlchemyEngine extends Application implements Runnable {
     }
 
     private void detectCollision(List<Class<? extends Element>> filter, LinkedList<Element> collisions, ArrayList<Point2D.Double> points) {
-        for (Element element : getElements()) {
+        for (Element element : elements) {
             if (filter.contains(element.getClass())) continue;
 
             if (points.contains(element.getPosition())) {
@@ -421,7 +383,7 @@ public class AlchemyEngine extends Application implements Runnable {
     //Element
     public boolean addElement(Element element) {
         boolean tooClose = false;
-        for (Element otherElement : getElements()) {
+        for (Element otherElement : elements) {
             if (element.equals(otherElement)) continue;
 
             if (element.getPosition().distance(otherElement.getPosition()) < 10) {
@@ -446,9 +408,7 @@ public class AlchemyEngine extends Application implements Runnable {
     }
 
     public void removeAtPoint(Point2D.Double position) {
-        LinkedList<Element> removeIf = new LinkedList<>(getElements());
-        removeIf.removeIf(element -> element.getPosition().distance(position) < 10);
-        setElements(removeIf);
+        elements.removeIf(element -> element.getPosition().distance(position) < 10);
         isSaved = false;
     }
 
@@ -587,7 +547,7 @@ public class AlchemyEngine extends Application implements Runnable {
             }
 
             try (Scanner scanner = new Scanner(file)) {
-                setElements(objectReader.readValue(scanner.nextLine(), GameSave.class).getSavedElements(this));
+                elements = objectReader.readValue(scanner.nextLine(), GameSave.class).getSavedElements(this);
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (NullPointerException e) {
@@ -595,7 +555,7 @@ public class AlchemyEngine extends Application implements Runnable {
             }
         } else {
             ObjectWriter objectWriter = new ObjectMapper().writer();
-            GameSave gameSave = new GameSave(getElements());
+            GameSave gameSave = new GameSave(elements);
             if (file == null) {
                 file = buildFileChooser().showSaveDialog(window);
             }
@@ -626,7 +586,7 @@ public class AlchemyEngine extends Application implements Runnable {
             Popup popup = new Popup(this, "reset your alchemy", "You have not yet saved!", "reset", "cancel") {
                 @Override
                 public void yesButton() {
-                    setElements(new LinkedList<>());
+                    elements.clear();
                     elementsToAdd.clear();
                     isSaved = false;
                     this.close();
@@ -639,7 +599,7 @@ public class AlchemyEngine extends Application implements Runnable {
             };
             popup.start();
         } else {
-            setElements(new LinkedList<>());
+            elements.clear();
             elementsToAdd.clear();
             isSaved = false;
         }
