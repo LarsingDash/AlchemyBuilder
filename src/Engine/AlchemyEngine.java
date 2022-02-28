@@ -330,12 +330,13 @@ public class AlchemyEngine extends Application {
             Point2D.Double startingPosition = new Point2D.Double(origin.x - leftDistance + 10, origin.y + upDistance - 10);
 
             all:
-            for (int verI = 0; verI < Math.abs(upDistance + downDistance) / 10 - 1; verI++) {
+            for (int verI = Math.abs(upDistance + downDistance) / 10 - 2; verI >= 0; verI--) {
                 for (int horI = 0; horI < Math.abs(leftDistance + rightDistance) / 10 - 1; horI++) {
                     Point2D.Double currentPosition = new Point2D.Double(startingPosition.x + 10 * horI, startingPosition.y - 10 * verI);
 
                     try {
                         Element element = elementClass.newInstance();
+
                         element.setEngine(this);
                         element.setPosition(currentPosition);
                         if (!addElement(element)) {

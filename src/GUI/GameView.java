@@ -123,17 +123,18 @@ public class GameView extends BorderPane {
                             engine.addElement(element);
                         }
                     } else {
+                        double verStartingPoint = shiftVer;
                         if (verStep < 0) {
-                            amount *= -1;
                             startI = 1;
                             verStep--;
+                            verStartingPoint = shiftVer - amount * Math.abs(verStep);
                         }
 
                         for (int i = startI; i < Math.abs(verStep); i++) {
                             Element element = selectedButton.getElement().newInstance();
 
                             element.setEngine(engine);
-                            element.setPosition(new Point2D.Double(shiftHor, shiftVer + amount * i));
+                            element.setPosition(new Point2D.Double(shiftHor, verStartingPoint + amount * i));
                             engine.addElement(element);
                         }
                     }
