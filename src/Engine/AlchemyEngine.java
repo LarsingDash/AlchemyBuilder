@@ -251,6 +251,8 @@ public class AlchemyEngine extends Application {
     }
 
     private void buoyancyTest(Fluid fluid, Fluid otherFluid) {
+        if (fluid.getClass() == otherFluid.getClass()) return;
+
         if (buoyancyList.indexOf(fluid.getClass()) > buoyancyList.indexOf(otherFluid.getClass())) {
             Element castedFluid = (Element) fluid;
             Element castedOtherFluid = (Element) otherFluid;
