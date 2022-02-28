@@ -8,7 +8,7 @@ public class Water extends Fluid {
     private int sleepClock = -1;
 
     public Water() {
-        super(CollisionStyle.FLUID_FIRST, Color.BLUE, false, 0, CollisionStyle.FLUID_SECOND);
+        super(CollisionStyle.FLUID_SIMPLE, Color.BLUE, false, 0, CollisionStyle.FLUID_FULL);
     }
 
     @Override
@@ -24,12 +24,12 @@ public class Water extends Fluid {
                     staticStage = 2;
                 } else {
                     if (staticCounter % 10 == 0) {
-                        getEngine().collisionCheck(this, getFilter(), CollisionStyle.FLUID_SECOND);
+                        getEngine().collisionCheck(this, getFilter(), CollisionStyle.FLUID_FULL);
                     }
                 }
             } else {
                 if (staticCounter % 100 == 0) {
-                    getEngine().collisionCheck(this, getFilter(), CollisionStyle.FLUID_SECOND);
+                    getEngine().collisionCheck(this, getFilter(), CollisionStyle.FLUID_FULL);
                 }
             }
         }
@@ -37,18 +37,14 @@ public class Water extends Fluid {
         switch (getMovement()) {
             case LEFT:
                 getPosition().setLocation(getPosition().x - 10,getPosition().y);
-                setColor(Color.YELLOW);
                 break;
             case RIGHT:
                 getPosition().setLocation(getPosition().x + 10,getPosition().y);
-                setColor(Color.YELLOW);
                 break;
             case DOWN:
                 getPosition().setLocation(getPosition().x, getPosition().y - 10);
-                setColor(Color.BLUE);
                 break;
             default:
-                setColor(Color.RED);
                 break;
         }
     }

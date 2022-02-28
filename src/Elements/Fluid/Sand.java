@@ -9,7 +9,7 @@ public class Sand extends Fluid {
     private int sleepClock = -1;
 
     public Sand() {
-        super(CollisionStyle.FLUID_FIRST, Color.YELLOW, false, 0, CollisionStyle.FLUID_FIRST);
+        super(CollisionStyle.FLUID_SIMPLE, Color.YELLOW, false, 0, CollisionStyle.FLUID_SIMPLE);
     }
 
     @Override

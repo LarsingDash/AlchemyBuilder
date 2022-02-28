@@ -183,7 +183,7 @@ public class AlchemyEngine extends Application {
             case ROUND:
                 detectCollision(origin, filter, collided, new ArrayList<>(Arrays.asList(new Point2D.Double(origin.x + 10, origin.y + 10), new Point2D.Double(origin.x + 10, origin.y - 10), new Point2D.Double(origin.x - 10, origin.y + 10), new Point2D.Double(origin.x - 10, origin.y - 10))), Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT);
                 break;
-            case FLUID_FIRST:
+            case FLUID_SIMPLE:
                 Point2D.Double position = fluid.getPosition();
                 detectCollision(position, filter, collided, new ArrayList<>(Collections.singletonList(new Point2D.Double(position.x, position.y - 10))));
 
@@ -193,7 +193,7 @@ public class AlchemyEngine extends Application {
                 }
 
                 break;
-            case FLUID_SECOND:
+            case FLUID_FULL:
                 //Make points
                 ArrayList<Point2D.Double> allPointsLeft = new ArrayList<>();
                 ArrayList<Point2D.Double> allPointsRight = new ArrayList<>();

@@ -25,15 +25,15 @@ public abstract class Fluid extends Element {
 
     @Override
     public boolean collide(LinkedList<Element> collided) {
-        if (fluidStyle == CollisionStyle.FLUID_FIRST) {
+        if (fluidStyle == CollisionStyle.FLUID_SIMPLE) {
             movement = FluidMovement.BLOCKED;
         } else if (staticStage < 1) {
             if (collided.get(0).getClass().getSuperclass() == Fluid.class) {
                 Fluid other = (Fluid) collided.get(0);
                 if (other.getMovement() == FluidMovement.DOWN) return true;
-                getEngine().collisionCheck(this, getFilter(), CollisionStyle.FLUID_SECOND);
+                getEngine().collisionCheck(this, getFilter(), CollisionStyle.FLUID_FULL);
             } else {
-                getEngine().collisionCheck(this, getFilter(), CollisionStyle.FLUID_SECOND);
+                getEngine().collisionCheck(this, getFilter(), CollisionStyle.FLUID_FULL);
             }
         }
 

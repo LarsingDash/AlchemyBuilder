@@ -9,6 +9,6 @@ public enum CollisionStyle {
     RIGHT,
     FULL,
     ROUND,
-    FLUID_FIRST,
-    FLUID_SECOND
+    FLUID_SIMPLE,
+    FLUID_FULL
 }
