@@ -13,12 +13,12 @@ import javafx.stage.Stage;
 import java.awt.*;
 
 abstract public class Popup extends Stage {
-    private AlchemyEngine engine;
-    private String mainText;
-    private String extraText;
+    private final AlchemyEngine engine;
+    private final String mainText;
+    private final String extraText;
 
-    private String leftText;
-    private String rightText;
+    private final String leftText;
+    private final String rightText;
 
     public Popup(AlchemyEngine engine, String mainText, String extraText, String leftText, String rightText) {
         this.engine = engine;

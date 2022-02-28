@@ -6,6 +6,7 @@ public class SavablePoint implements Serializable {
     private double x = 0d;
     private double y = 0d;
 
+    @SuppressWarnings("unused")
     public SavablePoint() {
     }
 

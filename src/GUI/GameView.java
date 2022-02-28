@@ -26,11 +26,11 @@ import java.awt.geom.Point2D;
 
 public class GameView extends BorderPane {
     //Engine and other
-    private AlchemyEngine engine;
-    private ToggleGroup toggleGroup = new ToggleGroup();
+    private final AlchemyEngine engine;
+    private final ToggleGroup toggleGroup = new ToggleGroup();
 
     //GUI
-    private Canvas canvas = new Canvas();
+    private final Canvas canvas = new Canvas();
     private FXGraphics2D graphics;
 
     //Mouse

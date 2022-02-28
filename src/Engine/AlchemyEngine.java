@@ -3,7 +3,6 @@ package Engine;
 import Elements.Block.Stone;
 import Elements.Block.Wood;
 import Elements.Element;
-import Elements.Elements;
 import Elements.Fluid.Fluid;
 import Elements.Fluid.Sand;
 import Elements.Fluid.Water;
@@ -185,8 +184,7 @@ public class AlchemyEngine extends Application {
                 detectCollision(origin, filter, collided, new ArrayList<>(Arrays.asList(new Point2D.Double(origin.x + 10, origin.y + 10), new Point2D.Double(origin.x + 10, origin.y - 10), new Point2D.Double(origin.x - 10, origin.y + 10), new Point2D.Double(origin.x - 10, origin.y - 10))), Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT);
                 break;
             case GRAVITY_FIRST:
-                Element castedFluid = (Element) fluid;
-                Point2D.Double position = castedFluid.getPosition();
+                Point2D.Double position = fluid.getPosition();
                 detectCollision(position, filter, collided, new ArrayList<>(Collections.singletonList(new Point2D.Double(position.x, position.y - 10))));
 
                 if (collided.size() == 1) {
@@ -254,11 +252,9 @@ public class AlchemyEngine extends Application {
         if (fluid.getClass() == otherFluid.getClass()) return;
 
         if (buoyancyList.indexOf(fluid.getClass()) > buoyancyList.indexOf(otherFluid.getClass())) {
-            Element castedFluid = (Element) fluid;
-            Element castedOtherFluid = (Element) otherFluid;
-            Point2D.Double tempPosition = castedFluid.getPosition();
+            Point2D.Double tempPosition = fluid.getPosition();
 
-            castedFluid.setPosition(castedOtherFluid.getPosition());
+            fluid.setPosition(otherFluid.getPosition());
 
             while (true) {
                 ArrayList<Element> collisions = new ArrayList<>();
@@ -267,7 +263,7 @@ public class AlchemyEngine extends Application {
                 if (!collisions.isEmpty()) {
                     tempPosition.setLocation(tempPosition.x, tempPosition.y + 10);
                 } else {
-                    castedOtherFluid.setPosition(tempPosition);
+                    otherFluid.setPosition(tempPosition);
                     break;
                 }
             }
@@ -353,7 +349,7 @@ public class AlchemyEngine extends Application {
         }
     }
 
-    private int horizontalDistanceCheck(Point2D.Double origin, boolean isLeft, List<Class<? extends Element>> filter, Point2D.Double blindSpot) {
+    private int horizontalDistanceCheck(Point2D.Double origin, boolean isLeft, List<Class<? extends Element>> filter) {
         int amount = 10;
         if (!isLeft) {
             amount *= -1;
@@ -369,10 +365,6 @@ public class AlchemyEngine extends Application {
         }
 
         return 0;
-    }
-
-    private int horizontalDistanceCheck(Point2D.Double origin, boolean isLeft, List<Class<? extends Element>> filter) {
-        return horizontalDistanceCheck(origin, isLeft, filter, new Point2D.Double(-1, -1));
     }
 
     private int verticalDistanceCheck(Point2D.Double origin, boolean isUp) {
@@ -554,24 +546,23 @@ public class AlchemyEngine extends Application {
     }
 
     public List<Class<? extends Element>> invertFilter(List<Class<? extends Element>> filter) {
-        ArrayList<Class<? extends Element>> toReturn = getElementsUnder(Elements.class);
+        ArrayList<Class<? extends Element>> toReturn = getElementsUnder(Element.class);
         toReturn.removeAll(filter);
 
         return toReturn;
     }
 
-    public ArrayList<Class<? extends Element>> getElementsUnder(Class<? extends Elements> type) {
+    public ArrayList<Class<? extends Element>> getElementsUnder(Class<? extends Element> type) {
         ArrayList<Class<? extends Element>> allElements = new ArrayList<>(Arrays.asList(Stone.class, Wood.class, Sand.class, Water.class, Fire.class));
         ArrayList<Class<? extends Element>> remainingElements = new ArrayList<>();
 
-        if (type == Elements.class) {
+        if (type == Element.class) {
             remainingElements.addAll(allElements);
             return remainingElements;
         }
 
         for (Class<? extends Element> element : allElements) {
-            ArrayList<Class<?>> interfaces = new ArrayList<>(Arrays.asList(element.getInterfaces()));
-            if (interfaces.contains(type)) {
+            if (element.getSuperclass() == type) {
                 remainingElements.add(element);
             }
         }

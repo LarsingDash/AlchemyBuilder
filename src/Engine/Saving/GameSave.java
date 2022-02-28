@@ -9,12 +9,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 @JsonDeserialize(as = GameSave.class)
+@SuppressWarnings("unused")
 public class GameSave implements Serializable {
-    private ArrayList<SavablePoint> savedPoints = new ArrayList<>();
-    private ArrayList<String> savedElements  = new ArrayList<>();
-
     public GameSave() {
     }
+    private ArrayList<SavablePoint> savedPoints = new ArrayList<>();
+
+    private ArrayList<String> savedElements  = new ArrayList<>();
 
     public GameSave(ArrayList<Element> elements) {
         for (Element element : elements) {
@@ -46,12 +47,12 @@ public class GameSave implements Serializable {
         return savedPoints;
     }
 
-    public ArrayList<String> getSavedElements() {
-        return savedElements;
-    }
-
     public void setSavedPoints(ArrayList<SavablePoint> savedPoints) {
         this.savedPoints = savedPoints;
+    }
+
+    public ArrayList<String> getSavedElements() {
+        return savedElements;
     }
 
     public void setSavedElements(ArrayList<String> savedElements) {

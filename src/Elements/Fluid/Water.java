@@ -1,15 +1,11 @@
 package Elements.Fluid;
 
-import Elements.Element;
 import Enums.CollisionCheckStyle;
-import Enums.GravityMovement;
 
 import java.awt.*;
-import java.util.ArrayList;
 
-public class Water extends Element implements Fluid {
+public class Water extends Fluid {
     private int sleepClock = -1;
-    private GravityMovement movement = GravityMovement.DOWN;
 
     public Water() {
         super(CollisionCheckStyle.GRAVITY_FIRST, Color.BLUE, false, 0);
@@ -20,7 +16,7 @@ public class Water extends Element implements Fluid {
         sleepClock++;
         if (sleepClock % 2 == 0) return;
 
-        switch (movement) {
+        switch (getMovement()) {
             case LEFT:
                 getPosition().setLocation(getPosition().x - 10,getPosition().y);
                 setColor(Color.YELLOW);
@@ -36,38 +32,5 @@ public class Water extends Element implements Fluid {
             default:
                 setColor(Color.BLUE);
         }
-    }
-
-    @Override
-    public boolean collide(ArrayList<Element> collided) {
-        for (Element other : collided) {
-            if (getEngine().getElementsUnder(Fluid.class).contains(other.getClass())) {
-                Fluid otherWater = (Fluid) other;
-                if (otherWater.getMovement() == GravityMovement.BLOCKED) {
-                    this.movement = GravityMovement.BLOCKED;
-                } else {
-                    this.movement = GravityMovement.DOWN;
-                }
-            } else {
-                movement = GravityMovement.BLOCKED;
-            }
-        }
-
-        return true;
-    }
-
-    @Override
-    public void initFilter() {
-        setFilter(new ArrayList<>());
-    }
-
-    @Override
-    public void setMovement(GravityMovement movement) {
-        this.movement = movement;
-    }
-
-    @Override
-    public GravityMovement getMovement() {
-        return movement;
     }
 }

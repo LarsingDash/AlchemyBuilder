@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public abstract class Element implements Cloneable, Elements {
+public abstract class Element implements Cloneable {
     //Engine
     private AlchemyEngine engine;
 
@@ -126,10 +126,6 @@ public abstract class Element implements Cloneable, Elements {
 
     public void setCollisionCheckStyle(CollisionCheckStyle collisionCheckStyle) {
         this.collisionCheckStyle = collisionCheckStyle;
-    }
-
-    public Color getColor() {
-        return color;
     }
 
     public void setColor(Color color) {

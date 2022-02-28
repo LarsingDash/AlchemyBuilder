@@ -4,23 +4,17 @@ import Elements.Element;
 import Enums.CollisionCheckStyle;
 
 import java.awt.*;
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class Fire extends Element implements Gas {
+public class Fire extends Gas {
+    @SuppressWarnings("unused")
     public Fire() {
-        this(new Point2D.Double(0, 0), 15);
+        super(CollisionCheckStyle.UP, Color.RED, false);
     }
 
-    public Fire(Point2D.Double customStartingPoint, int customLifespan) {
+    public Fire(int customLifespan) {
         super(CollisionCheckStyle.UP, Color.RED, false, customLifespan);
-        setPosition(customStartingPoint);
-    }
-
-    @Override
-    public void behave() {
-        setPosition(new Point2D.Double(getPosition().x, getPosition().y + 10));
     }
 
     @Override

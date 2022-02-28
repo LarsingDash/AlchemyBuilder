@@ -9,7 +9,7 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class Wood extends Element implements Block {
+public class Wood extends Block {
     public Wood() {
         super(CollisionCheckStyle.NONE, Color.decode("#a15b00"), true, 0);
     }
@@ -25,16 +25,12 @@ public class Wood extends Element implements Block {
             }
 
             if (getBurnCount() == 20) {
-                Fire fire = new Fire(new Point2D.Double(getPosition().x, getPosition().y + 10), 7);
+                Fire fire = new Fire(7);
                 fire.setEngine(getEngine());
+                fire.setPosition(new Point2D.Double(getPosition().x, getPosition().y + 10));
                 getEngine().addElement(fire);
             }
         }
-    }
-
-    @Override
-    public boolean collide(ArrayList<Element> collided) {
-        return true;
     }
 
     @Override
