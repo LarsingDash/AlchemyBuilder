@@ -212,7 +212,6 @@ public class AlchemyEngine extends Application {
 
     private void detectCollision(List<Class<? extends Element>> filter, ArrayList<Element> collisions, ArrayList<Point2D.Double> points) {
         for (Element element : elements) {
-            //fixme
             if (filter.contains(element.getClass())) continue;
 
             if (points.contains(element.getPosition())) {

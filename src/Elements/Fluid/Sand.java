@@ -28,9 +28,9 @@ public class Sand extends Element implements Fluid {
     @Override
     public boolean collide(ArrayList<Element> collided) {
         for (Element other : collided) {
-            if (collided.get(0).getClass() == Sand.class) {
-                Sand otherWater = (Sand) other;
-                if (otherWater.movement == GravityMovement.BLOCKED) {
+            if (getEngine().getElementsUnder(Fluid.class).contains(other.getClass())) {
+                Fluid otherWater = (Fluid) other;
+                if (otherWater.getMovement() == GravityMovement.BLOCKED) {
                     this.movement = GravityMovement.BLOCKED;
                 } else {
                     this.movement = GravityMovement.DOWN;
@@ -51,5 +51,10 @@ public class Sand extends Element implements Fluid {
     @Override
     public void setMovement(GravityMovement movement) {
         this.movement = movement;
+    }
+
+    @Override
+    public GravityMovement getMovement() {
+        return movement;
     }
 }

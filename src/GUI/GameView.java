@@ -106,12 +106,15 @@ public class GameView extends BorderPane {
                 try {
                     ElementButton selectedButton = (ElementButton) toggleGroup.getSelectedToggle();
 
+                    int startI = 0;
                     if (Math.abs(horStep) > Math.abs(verStep)) {
                         if (horStep < 0) {
                             amount *= -1;
+                            startI = 1;
+                            horStep--;
                         }
 
-                        for (int i = 0; i < Math.abs(horStep); i++) {
+                        for (int i = startI; i < Math.abs(horStep); i++) {
                             Element element = selectedButton.getElement().newInstance();
 
                             element.setEngine(engine);
@@ -122,9 +125,11 @@ public class GameView extends BorderPane {
                     } else {
                         if (verStep < 0) {
                             amount *= -1;
+                            startI = 1;
+                            verStep--;
                         }
 
-                        for (int i = 0; i < Math.abs(verStep); i++) {
+                        for (int i = startI; i < Math.abs(verStep); i++) {
                             Element element = selectedButton.getElement().newInstance();
 
                             element.setEngine(engine);

@@ -41,9 +41,9 @@ public class Water extends Element implements Fluid {
     @Override
     public boolean collide(ArrayList<Element> collided) {
         for (Element other : collided) {
-            if (collided.get(0).getClass() == Water.class) {
-                Water otherWater = (Water) other;
-                if (otherWater.movement == GravityMovement.BLOCKED) {
+            if (getEngine().getElementsUnder(Fluid.class).contains(other.getClass())) {
+                Fluid otherWater = (Fluid) other;
+                if (otherWater.getMovement() == GravityMovement.BLOCKED) {
                     this.movement = GravityMovement.BLOCKED;
                 } else {
                     this.movement = GravityMovement.DOWN;
@@ -64,5 +64,10 @@ public class Water extends Element implements Fluid {
     @Override
     public void setMovement(GravityMovement movement) {
         this.movement = movement;
+    }
+
+    @Override
+    public GravityMovement getMovement() {
+        return movement;
     }
 }
