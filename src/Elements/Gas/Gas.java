@@ -1,19 +1,19 @@
 package Elements.Gas;
 
 import Elements.Element;
-import Enums.CollisionCheckStyle;
+import Enums.CollisionStyle;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 public abstract class Gas extends Element {
-    public Gas(CollisionCheckStyle collisionCheckStyle, Color color, boolean isFlammable, int customLifespan) {
-        super(collisionCheckStyle, color, isFlammable, customLifespan);
+    public Gas(CollisionStyle collisionStyle, Color color, boolean isFlammable, int customLifespan) {
+        super(collisionStyle, color, isFlammable, customLifespan);
     }
 
-    public Gas(CollisionCheckStyle collisionCheckStyle, Color color, boolean isFlammable) {
-        this(collisionCheckStyle, color, isFlammable, 15);
+    public Gas(CollisionStyle collisionStyle, Color color, boolean isFlammable) {
+        this(collisionStyle, color, isFlammable, 15);
     }
 
     @Override
@@ -22,7 +22,7 @@ public abstract class Gas extends Element {
     }
 
     @Override
-    abstract public boolean collide(ArrayList<Element> collided);
+    abstract public boolean collide(LinkedList<Element> collided);
 
     @Override
     public void initFilter() {

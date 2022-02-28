@@ -1,34 +1,39 @@
 package Elements.Fluid;
 
 import Elements.Element;
-import Enums.CollisionCheckStyle;
-import Enums.GravityMovement;
+import Enums.CollisionStyle;
+import Enums.FluidMovement;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public abstract class Fluid extends Element {
-    private GravityMovement movement = GravityMovement.DOWN;
+    private FluidMovement movement = FluidMovement.DOWN;
+    private final CollisionStyle fluidStyle;
 
-    public Fluid(CollisionCheckStyle collisionCheckStyle, Color color, boolean isFlammable, int lifespan) {
-        super(collisionCheckStyle, color, isFlammable, lifespan);
+    int staticStage = 0;
+    int staticCounter = 0;
+
+    public Fluid(CollisionStyle collisionStyle, Color color, boolean isFlammable, int lifespan, CollisionStyle fluidStyle) {
+        super(collisionStyle, color, isFlammable, lifespan);
+        this.fluidStyle = fluidStyle;
     }
 
     @Override
     abstract public void behave();
 
     @Override
-    public boolean collide(ArrayList<Element> collided) {
-        for (Element other : collided) {
-            if (getEngine().getElementsUnder(Fluid.class).contains(other.getClass())) {
-                Fluid otherWater = (Fluid) other;
-                if (otherWater.getMovement() == GravityMovement.BLOCKED) {
-                    this.movement = GravityMovement.BLOCKED;
-                } else {
-                    this.movement = GravityMovement.DOWN;
-                }
+    public boolean collide(LinkedList<Element> collided) {
+        if (fluidStyle == CollisionStyle.FLUID_FIRST) {
+            movement = FluidMovement.BLOCKED;
+        } else if (staticStage < 1) {
+            if (collided.get(0).getClass().getSuperclass() == Fluid.class) {
+                Fluid other = (Fluid) collided.get(0);
+                if (other.getMovement() == FluidMovement.DOWN) return true;
+                getEngine().collisionCheck(this, getFilter(), CollisionStyle.FLUID_SECOND);
             } else {
-                movement = GravityMovement.BLOCKED;
+                getEngine().collisionCheck(this, getFilter(), CollisionStyle.FLUID_SECOND);
             }
         }
 
@@ -40,11 +45,17 @@ public abstract class Fluid extends Element {
         setFilter(new ArrayList<>());
     }
 
-    public GravityMovement getMovement() {
+    public FluidMovement getMovement() {
         return movement;
     }
 
-    public void setMovement(GravityMovement movement) {
+    public void setMovement(FluidMovement movement) {
+        if (movement == FluidMovement.BLOCKED) {
+            staticStage = 1;
+            staticCounter++;
+        } else {
+            staticStage = 0;
+        }
         this.movement = movement;
     }
 }

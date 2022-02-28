@@ -2,22 +2,23 @@ package Elements.Block;
 
 import Elements.Element;
 import Elements.Gas.Fire;
-import Enums.CollisionCheckStyle;
+import Enums.CollisionStyle;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 
 public class Wood extends Block {
     public Wood() {
-        super(CollisionCheckStyle.NONE, Color.decode("#a15b00"), true, 0);
+        super(CollisionStyle.NONE, Color.decode("#a15b00"), true, 0);
     }
 
     @Override
     public void behave() {
         if (isLit() && getBurnCount() > 5) {
-            ArrayList<Element> collisionElements = getEngine().collisionCheck(getPosition(), getEngine().invertFilter(Collections.singletonList(Wood.class)), CollisionCheckStyle.ROUND);
+            LinkedList<Element> collisionElements = getEngine().collisionCheck(getPosition(), getEngine().invertFilter(Collections.singletonList(Wood.class)), CollisionStyle.ROUND);
             if (!collisionElements.isEmpty()) {
                 for (Element collisionElement : collisionElements) {
                     collisionElement.setLit(true);

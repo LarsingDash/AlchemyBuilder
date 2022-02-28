@@ -1,6 +1,6 @@
 package Enums;
 
-public enum CollisionCheckStyle {
+public enum CollisionStyle {
     NONE,
     POINT,
     UP,
@@ -9,6 +9,6 @@ public enum CollisionCheckStyle {
     RIGHT,
     FULL,
     ROUND,
-    GRAVITY_FIRST,
-    GRAVITY_SECOND
+    FLUID_FIRST,
+    FLUID_SECOND
 }

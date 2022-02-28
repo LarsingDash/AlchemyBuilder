@@ -2,12 +2,12 @@ package Elements;
 
 
 import Engine.AlchemyEngine;
-import Enums.CollisionCheckStyle;
+import Enums.CollisionStyle;
 import org.jfree.fx.FXGraphics2D;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
@@ -17,7 +17,7 @@ public abstract class Element implements Cloneable {
 
     //Properties
     private Point2D.Double position;
-    private CollisionCheckStyle collisionCheckStyle;
+    private CollisionStyle collisionStyle;
     private Color color;
     private List<Class<? extends Element>> filter;
 
@@ -31,10 +31,10 @@ public abstract class Element implements Cloneable {
     private int burnCount = 0;
 
     //Constructors
-    public Element(CollisionCheckStyle collisionCheckStyle, Color color, boolean isFlammable, int lifespan) {
+    public Element(CollisionStyle collisionStyle, Color color, boolean isFlammable, int lifespan) {
         //Properties
         this.position = new Point2D.Double(0,0);
-        this.collisionCheckStyle = collisionCheckStyle;
+        this.collisionStyle = collisionStyle;
         this.color = color;
 
         //Lifespan
@@ -77,7 +77,7 @@ public abstract class Element implements Cloneable {
 
     abstract public void behave();
 
-    abstract public boolean collide(ArrayList<Element> collided);
+    abstract public boolean collide(LinkedList<Element> collided);
 
     abstract public void initFilter();
 
@@ -120,12 +120,12 @@ public abstract class Element implements Cloneable {
         this.position = position;
     }
 
-    public CollisionCheckStyle getCollisionCheckStyle() {
-        return collisionCheckStyle;
+    public CollisionStyle getCollisionCheckStyle() {
+        return collisionStyle;
     }
 
-    public void setCollisionCheckStyle(CollisionCheckStyle collisionCheckStyle) {
-        this.collisionCheckStyle = collisionCheckStyle;
+    public void setCollisionCheckStyle(CollisionStyle collisionStyle) {
+        this.collisionStyle = collisionStyle;
     }
 
     public void setColor(Color color) {

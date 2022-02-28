@@ -1,6 +1,6 @@
 package Elements.Fluid;
 
-import Enums.CollisionCheckStyle;
+import Enums.CollisionStyle;
 
 import java.awt.*;
 
@@ -8,13 +8,31 @@ public class Water extends Fluid {
     private int sleepClock = -1;
 
     public Water() {
-        super(CollisionCheckStyle.GRAVITY_FIRST, Color.BLUE, false, 0);
+        super(CollisionStyle.FLUID_FIRST, Color.BLUE, false, 0, CollisionStyle.FLUID_SECOND);
     }
 
     @Override
     public void behave() {
         sleepClock++;
         if (sleepClock % 2 == 0) return;
+
+        if (staticStage != 0) {
+            staticCounter++;
+
+            if (staticStage == 1) {
+                if (staticCounter > 300) {
+                    staticStage = 2;
+                } else {
+                    if (staticCounter % 10 == 0) {
+                        getEngine().collisionCheck(this, getFilter(), CollisionStyle.FLUID_SECOND);
+                    }
+                }
+            } else {
+                if (staticCounter % 100 == 0) {
+                    getEngine().collisionCheck(this, getFilter(), CollisionStyle.FLUID_SECOND);
+                }
+            }
+        }
 
         switch (getMovement()) {
             case LEFT:
@@ -30,7 +48,8 @@ public class Water extends Fluid {
                 setColor(Color.BLUE);
                 break;
             default:
-                setColor(Color.BLUE);
+                setColor(Color.RED);
+                break;
         }
     }
 }

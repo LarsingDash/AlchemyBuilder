@@ -1,21 +1,21 @@
 package Elements.Block;
 
 import Elements.Element;
-import Enums.CollisionCheckStyle;
+import Enums.CollisionStyle;
 
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 public abstract class Block extends Element {
-    public Block(CollisionCheckStyle collisionCheckStyle, Color color, boolean isFlammable, int lifespan) {
-        super(collisionCheckStyle, color, isFlammable, lifespan);
+    public Block(CollisionStyle collisionStyle, Color color, boolean isFlammable, int lifespan) {
+        super(collisionStyle, color, isFlammable, lifespan);
     }
 
     @Override
     public void behave() {}
 
     @Override
-    public boolean collide(ArrayList<Element> collided) {
+    public boolean collide(LinkedList<Element> collided) {
         return true;
     }
 

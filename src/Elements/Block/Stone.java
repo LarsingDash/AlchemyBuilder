@@ -1,13 +1,13 @@
 package Elements.Block;
 
-import Enums.CollisionCheckStyle;
+import Enums.CollisionStyle;
 
 import java.awt.*;
 import java.util.ArrayList;
 
 public class Stone extends Block {
     public Stone() {
-        super(CollisionCheckStyle.NONE, Color.GRAY, false, 0);
+        super(CollisionStyle.NONE, Color.GRAY, false, 0);
     }
 
     @Override
