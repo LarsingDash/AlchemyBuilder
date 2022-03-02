@@ -10,7 +10,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 
 public abstract class Block extends Element {
-    private boolean isEmitter;
+    private final boolean isEmitter;
+
     public Block(CollisionStyle collisionStyle, Color color, boolean isFlammable, boolean isBurnable, int lifespan, boolean isEmitter) {
         super(collisionStyle, color, isFlammable, isBurnable, lifespan);
         this.isEmitter = isEmitter;

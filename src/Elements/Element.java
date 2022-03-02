@@ -17,7 +17,7 @@ public abstract class Element implements Cloneable {
 
     //Properties
     private Point2D.Double position;
-    private CollisionStyle collisionStyle;
+    private final CollisionStyle collisionStyle;
     private Color color;
     private List<Class<? extends Element>> filter;
 
@@ -56,7 +56,7 @@ public abstract class Element implements Cloneable {
             burnCount++;
 
             if (isBurnable) {
-                color = updateColorFade(Color.RED);
+                color = updateColorFade();
 
                 //Kill
                 if (burnCount == 30) {
@@ -86,13 +86,13 @@ public abstract class Element implements Cloneable {
 
     abstract public void initFilter();
 
-    private Color updateColorFade(Color toFadeTo) {
+    private Color updateColorFade() {
         float fraction = (float) burnCount / 30;
         fraction = Math.min(1.0f, fraction);
 
-        int red = (int) (fraction * toFadeTo.getRed() + (1 - fraction) * color.getRed());
-        int green = (int) (fraction * toFadeTo.getGreen() + (1 - fraction) * color.getGreen());
-        int blue = (int) (fraction * toFadeTo.getBlue() + (1 - fraction) * color.getBlue());
+        int red = (int) (fraction * Color.RED.getRed() + (1 - fraction) * color.getRed());
+        int green = (int) (fraction * Color.RED.getGreen() + (1 - fraction) * color.getGreen());
+        int blue = (int) (fraction * Color.RED.getBlue() + (1 - fraction) * color.getBlue());
         return new Color(red, green, blue);
     }
 
@@ -129,10 +129,6 @@ public abstract class Element implements Cloneable {
         return collisionStyle;
     }
 
-    public void setCollisionCheckStyle(CollisionStyle collisionStyle) {
-        this.collisionStyle = collisionStyle;
-    }
-
     public void setColor(Color color) {
         this.color = color;
     }
@@ -151,10 +147,6 @@ public abstract class Element implements Cloneable {
 
     public boolean isFlammable() {
         return isFlammable;
-    }
-
-    public boolean isBurnable() {
-        return isBurnable;
     }
 
     public int getBurnCount() {
