@@ -9,7 +9,7 @@ import java.util.LinkedList;
 
 public abstract class Gas extends Element {
     public Gas(CollisionStyle collisionStyle, Color color, boolean isFlammable, int customLifespan) {
-        super(collisionStyle, color, isFlammable, customLifespan);
+        super(collisionStyle, color, isFlammable, false, customLifespan);
     }
 
     public Gas(CollisionStyle collisionStyle, Color color, boolean isFlammable) {

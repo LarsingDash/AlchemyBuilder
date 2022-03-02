@@ -27,11 +27,12 @@ public abstract class Element implements Cloneable {
 
     //Fire
     private final boolean isFlammable;
+    private final boolean isBurnable;
     private boolean isLit = false;
     private int burnCount = 0;
 
     //Constructors
-    public Element(CollisionStyle collisionStyle, Color color, boolean isFlammable, int lifespan) {
+    public Element(CollisionStyle collisionStyle, Color color, boolean isFlammable, boolean isBurnable, int lifespan) {
         //Properties
         this.position = new Point2D.Double(0,0);
         this.collisionStyle = collisionStyle;
@@ -42,6 +43,7 @@ public abstract class Element implements Cloneable {
 
         //Fire
         this.isFlammable = isFlammable;
+        this.isBurnable = isBurnable;
     }
 
     //Behavioral
@@ -50,7 +52,7 @@ public abstract class Element implements Cloneable {
         if (position.x <= 0 || position.x >= 1520 || position.y <= 0 || position.y >= 1080) return true;   //WorldBorder
 
         //Burn
-        if (isFlammable && isLit) {
+        if (isFlammable && isLit && isBurnable) {
             burnCount++;
             color = updateColorFade(Color.RED);
 
@@ -142,6 +144,10 @@ public abstract class Element implements Cloneable {
 
     public boolean isLit() {
         return isLit;
+    }
+
+    public boolean isBurnable() {
+        return isBurnable;
     }
 
     public int getBurnCount() {

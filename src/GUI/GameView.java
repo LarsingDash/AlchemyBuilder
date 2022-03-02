@@ -1,6 +1,7 @@
 package GUI;
 
 import Elements.*;
+import Elements.Block.Coal;
 import Elements.Block.Stone;
 import Elements.Block.Wood;
 import Elements.Fluid.Sand;
@@ -286,10 +287,11 @@ public class GameView extends BorderPane {
     private VBox makeBlockButtons() {
         //Elements
         Label blocksLabel = new Label("Blocks");
+        ElementButton coal = new ElementButton(toggleGroup, Coal.class, "coal");
         ElementButton wood = new ElementButton(toggleGroup, Wood.class, "wood");
         ElementButton stone = new ElementButton(toggleGroup, Stone.class, "stone");
 
-        VBox vBox = new VBox(blocksLabel, wood, stone);
+        VBox vBox = new VBox(blocksLabel, coal, wood, stone);
         vBox.setSpacing(20);
         return vBox;
     }

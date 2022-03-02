@@ -12,7 +12,7 @@ import java.util.LinkedList;
 
 public class Wood extends Block {
     public Wood() {
-        super(CollisionStyle.NONE, Color.decode("#a15b00"), true, 0);
+        super(CollisionStyle.NONE, Color.decode("#a15b00"), true, true, 0);
     }
 
     @Override

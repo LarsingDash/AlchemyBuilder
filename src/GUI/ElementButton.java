@@ -3,6 +3,7 @@ package GUI;
 import Elements.Element;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 
@@ -17,6 +18,8 @@ public class ElementButton extends ToggleButton {
 
         this.setMinSize(50,50);
         setBackground(new Background(new BackgroundImage(new Image(new File("src/resources/" + imageURL + ".png").toURI().toString()), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
+
+        setTooltip(new Tooltip(imageURL));
     }
 
     public Class<? extends Element> getElement() {

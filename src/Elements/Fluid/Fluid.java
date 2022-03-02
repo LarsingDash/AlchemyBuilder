@@ -16,7 +16,7 @@ public abstract class Fluid extends Element {
     int staticCounter = 0;
 
     public Fluid(CollisionStyle collisionStyle, Color color, boolean isFlammable, int lifespan, CollisionStyle fluidStyle) {
-        super(collisionStyle, color, isFlammable, lifespan);
+        super(collisionStyle, color, isFlammable, false, lifespan);
         this.fluidStyle = fluidStyle;
     }
 

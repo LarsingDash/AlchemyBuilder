@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class Stone extends Block {
     public Stone() {
-        super(CollisionStyle.NONE, Color.GRAY, false, 0);
+        super(CollisionStyle.NONE, Color.GRAY, false, false, 0);
     }
 
     @Override

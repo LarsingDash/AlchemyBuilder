@@ -7,8 +7,8 @@ import java.awt.*;
 import java.util.LinkedList;
 
 public abstract class Block extends Element {
-    public Block(CollisionStyle collisionStyle, Color color, boolean isFlammable, int lifespan) {
-        super(collisionStyle, color, isFlammable, lifespan);
+    public Block(CollisionStyle collisionStyle, Color color, boolean isFlammable, boolean isBurnable, int lifespan) {
+        super(collisionStyle, color, isFlammable, isBurnable, lifespan);
     }
 
     @Override

@@ -395,6 +395,7 @@ public class AlchemyEngine extends Application {
         if (!tooClose) {
             element.setPosition(new Point2D.Double(roundToTens(element.getPosition().x), roundToTens(element.getPosition().y)));
             elementsToAdd.add(element);
+            element.draw(graphics);
             isSaved = false;
             return true;
         } else {
