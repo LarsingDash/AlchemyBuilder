@@ -1,9 +1,9 @@
 package GUI;
 
-import Elements.*;
 import Elements.Block.Coal;
 import Elements.Block.Stone;
 import Elements.Block.Wood;
+import Elements.Element;
 import Elements.Fluid.Sand;
 import Elements.Fluid.Water;
 import Elements.Gas.Fire;

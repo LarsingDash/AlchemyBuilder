@@ -1,8 +1,11 @@
 package Elements.Fluid;
 
+import Elements.Element;
+import Elements.Gas.Fire;
 import Enums.CollisionStyle;
 
 import java.awt.*;
+import java.util.LinkedList;
 
 public class Water extends Fluid {
     private int sleepClock = -1;
@@ -46,6 +49,13 @@ public class Water extends Fluid {
                 break;
             default:
                 break;
+        }
+    }
+
+    @Override
+    public void extraCollide(LinkedList<Element> collided) {
+        for (Element element : collided) {
+            if (element.getClass() != Fire.class) element.setLit(false);
         }
     }
 }

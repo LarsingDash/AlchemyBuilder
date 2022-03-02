@@ -1,11 +1,11 @@
 package Elements.Fluid;
 
 import Elements.Element;
+import Elements.Gas.Gas;
 import Enums.CollisionStyle;
 import Enums.FluidMovement;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 public abstract class Fluid extends Element {
@@ -37,12 +37,16 @@ public abstract class Fluid extends Element {
             }
         }
 
+        extraCollide(collided);
+
         return true;
     }
 
+    public void extraCollide(LinkedList<Element> collided) {};
+
     @Override
     public void initFilter() {
-        setFilter(new ArrayList<>());
+        setFilter(getEngine().getElementsUnder(Gas.class));
     }
 
     public FluidMovement getMovement() {

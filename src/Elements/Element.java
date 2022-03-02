@@ -52,13 +52,16 @@ public abstract class Element implements Cloneable {
         if (position.x <= 0 || position.x >= 1520 || position.y <= 0 || position.y >= 1080) return true;   //WorldBorder
 
         //Burn
-        if (isFlammable && isLit && isBurnable) {
+        if (isFlammable && isLit) {
             burnCount++;
-            color = updateColorFade(Color.RED);
 
-            //Kill
-            if (burnCount == 30) {
-                return true;
+            if (isBurnable) {
+                color = updateColorFade(Color.RED);
+
+                //Kill
+                if (burnCount == 30) {
+                    return true;
+                }
             }
         }
 
@@ -144,6 +147,10 @@ public abstract class Element implements Cloneable {
 
     public boolean isLit() {
         return isLit;
+    }
+
+    public boolean isFlammable() {
+        return isFlammable;
     }
 
     public boolean isBurnable() {
