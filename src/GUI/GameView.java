@@ -9,17 +9,16 @@ import Elements.Fluid.Water;
 import Elements.Gas.Fire;
 import Engine.AlchemyEngine;
 import Enums.Direction;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.text.Font;
 import org.jfree.fx.FXGraphics2D;
 
 import java.awt.*;
@@ -33,6 +32,8 @@ public class GameView extends BorderPane {
     //GUI
     private final Canvas canvas = new Canvas();
     private FXGraphics2D graphics;
+    private final javafx.scene.text.Font font = new Font("Arial Black", 20);
+    private final javafx.scene.text.Font bigFont = new Font("Arial Black", 30);
 
     //Mouse
     private MouseEvent lastMouseEvent = null;
@@ -56,18 +57,50 @@ public class GameView extends BorderPane {
     }
 
     public FXGraphics2D init() {
-        //Buttons
-        HBox alchemyButtons = new HBox(this.makeParticleButtons(), this.makeBlockButtons());
-        alchemyButtons.setSpacing(20);
+        //Alchemy
         Label elementsLabel = new Label("Elements");
-        VBox alchemyButtonsVBox = new VBox(elementsLabel, alchemyButtons);
-        alchemyButtonsVBox.setAlignment(Pos.CENTER_LEFT);
-        alchemyButtonsVBox.setMinWidth(200);
-        this.setLeft(alchemyButtonsVBox);
+        elementsLabel.setFont(bigFont);
+        VBox alchemyButtons = new VBox(elementsLabel, makeParticleButtons(), makeBlockButtons());
 
+        alchemyButtons.setBackground(new Background(new BackgroundFill(javafx.scene.paint.Color.gray(0.6), CornerRadii.EMPTY, Insets.EMPTY)));
+        alchemyButtons.setAlignment(Pos.CENTER);
+        alchemyButtons.setMinWidth(200);
+        alchemyButtons.setMaxHeight(400);
+        alchemyButtons.setTranslateY(340);
+        alchemyButtons.setSpacing(20);
+
+        //Game
         VBox gameButtons = new VBox(this.makeGameButtons());
-        gameButtons.setAlignment(Pos.CENTER_RIGHT);
-        this.setRight(gameButtons);
+        gameButtons.setBackground(new Background(new BackgroundFill(javafx.scene.paint.Color.gray(0.6), CornerRadii.EMPTY, Insets.EMPTY)));
+        gameButtons.setMinWidth(200);
+        gameButtons.setMinHeight(200);
+        gameButtons.setAlignment(Pos.CENTER);
+
+        //Credits
+        Label name1 = new Label("Alchemy");
+        Label name2 = new Label("Builder");
+        Label name3 = new Label("by LarsingDash");
+
+        name1.setFont(bigFont);
+        name2.setFont(bigFont);
+        name3.setFont(font);
+
+        VBox credits = new VBox(name1, name2, name3);
+        credits.setMinWidth(200);
+        credits.setMinHeight(200);
+        credits.setAlignment(Pos.CENTER);
+        credits.setBackground(new Background(new BackgroundFill(javafx.scene.paint.Color.gray(0.6), CornerRadii.EMPTY, Insets.EMPTY)));
+
+
+        //Right side
+        VBox rightSide = new VBox(credits, gameButtons);
+        rightSide.setMinHeight(500);
+        rightSide.setSpacing(100);
+        rightSide.setTranslateY(290);
+
+        //Other
+        this.setLeft(alchemyButtons);
+        this.setRight(rightSide);
 
         //Canvas
         canvas.setWidth(1520);
@@ -76,6 +109,8 @@ public class GameView extends BorderPane {
         graphics = new FXGraphics2D(canvas.getGraphicsContext2D());
         VBox canvasBox = new VBox(canvas);
         this.setCenter(canvasBox);
+
+        setBackground(new Background(new BackgroundFill(javafx.scene.paint.Color.gray(0.7), CornerRadii.EMPTY, Insets.EMPTY)));
 
         //Input
         setOnKeyPressed(this::shiftListener);
@@ -274,34 +309,60 @@ public class GameView extends BorderPane {
     //Making buttons
     private VBox makeParticleButtons() {
         //Elements
-        Label particleLabel = new Label("Particles");
+        Label particleLabel = new Label("particles");
+        particleLabel.setFont(font);
+
         ElementButton fire = new ElementButton(toggleGroup, Fire.class, "fire");
         ElementButton water = new ElementButton(toggleGroup, Water.class, "water");
         ElementButton sand = new ElementButton(toggleGroup, Sand.class, "sand");
 
-        VBox vBox = new VBox(particleLabel, fire, water, sand);
-        vBox.setSpacing(20);
-        return vBox;
+        HBox buttons = new HBox(fire, water, sand);
+        buttons.setSpacing(10);
+        buttons.setAlignment(Pos.CENTER);
+
+        VBox full = new VBox(particleLabel, buttons);
+        full.setAlignment(Pos.CENTER);
+        full.setSpacing(10);
+        return full;
     }
 
     private VBox makeBlockButtons() {
         //Elements
-        Label blocksLabel = new Label("Blocks");
+        Label blocksLabel = new Label("blocks");
+        blocksLabel.setFont(font);
+
         ElementButton coal = new ElementButton(toggleGroup, Coal.class, "coal");
         ElementButton wood = new ElementButton(toggleGroup, Wood.class, "wood");
         ElementButton stone = new ElementButton(toggleGroup, Stone.class, "stone");
 
-        VBox vBox = new VBox(blocksLabel, coal, wood, stone);
-        vBox.setSpacing(20);
-        return vBox;
+        HBox buttons = new HBox(coal, wood, stone);
+        buttons.setSpacing(10);
+        buttons.setAlignment(Pos.CENTER);
+
+        VBox full = new VBox(blocksLabel, buttons);
+        full.setAlignment(Pos.CENTER);
+        full.setSpacing(10);
+        return full;
     }
 
     private VBox makeGameButtons() {
         //Elements
-        Button load = new Button("load");
-        Button save = new Button("save");
-        Button reset = new Button("reset");
-        Button quit = new Button("quit");
+        GUIButton load = new GUIButton("load");
+        GUIButton save = new GUIButton("save");
+        GUIButton reset = new GUIButton("reset");
+        GUIButton quit = new GUIButton("quit");
+
+        HBox top = new HBox(load, save);
+        HBox bottom = new HBox(reset, quit);
+        VBox full = new VBox(top, bottom);
+
+        top.setSpacing(15);
+        bottom.setSpacing(15);
+        full.setSpacing(15);
+
+        top.setAlignment(Pos.CENTER);
+        bottom.setAlignment(Pos.CENTER);
+        full.setAlignment(Pos.CENTER);
 
         //Actions
         load.setOnAction(event -> engine.loadSave(true, engine.getStage()));
@@ -309,7 +370,7 @@ public class GameView extends BorderPane {
         reset.setOnAction(event -> engine.reset());
         quit.setOnAction(event -> engine.attemptQuit());
 
-        return new VBox(load, save, reset, quit);
+        return full;
     }
 
     //Screen wiping
