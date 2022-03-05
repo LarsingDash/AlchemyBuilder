@@ -21,7 +21,7 @@ public abstract class Block extends Element {
     public void behave() {
         if  (isFlammable()) {
             if (isLit() && getBurnCount() > 5) {
-                LinkedList<Element> collisionElements = getEngine().collisionCheck(getPosition(), getEngine().invertFilter(Collections.singletonList(Wood.class)), CollisionStyle.ROUND);
+                LinkedList<Element> collisionElements = getEngine().collisionCheck(getPosition(), getEngine().invertFilter(Collections.singletonList(this.getClass())), CollisionStyle.ROUND);
                 if (!collisionElements.isEmpty()) {
                     for (Element collisionElement : collisionElements) {
                         collisionElement.setLit(true);

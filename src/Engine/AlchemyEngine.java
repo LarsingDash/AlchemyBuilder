@@ -1,5 +1,6 @@
 package Engine;
 
+import Elements.Block.Coal;
 import Elements.Block.Stone;
 import Elements.Block.Wood;
 import Elements.Element;
@@ -664,7 +665,7 @@ public class AlchemyEngine extends Application {
     }
 
     public ArrayList<Class<? extends Element>> getElementsUnder(Class<? extends Element> type) {
-        ArrayList<Class<? extends Element>> allElements = new ArrayList<>(Arrays.asList(Stone.class, Wood.class, Sand.class, Water.class, Fire.class));
+        ArrayList<Class<? extends Element>> allElements = new ArrayList<>(Arrays.asList(Coal.class, Stone.class, Wood.class, Sand.class, Water.class, Fire.class));
         ArrayList<Class<? extends Element>> remainingElements = new ArrayList<>();
 
         if (type == Element.class) {

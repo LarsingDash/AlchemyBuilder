@@ -42,7 +42,7 @@ public abstract class Fluid extends Element {
         return true;
     }
 
-    public void extraCollide(LinkedList<Element> collided) {};
+    public void extraCollide(LinkedList<Element> collided) {}
 
     @Override
     public void initFilter() {
