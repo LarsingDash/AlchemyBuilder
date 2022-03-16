@@ -107,8 +107,7 @@ public class GameView extends BorderPane {
         canvas.setHeight(1080);
         canvas.setScaleY(-1);
         graphics = new FXGraphics2D(canvas.getGraphicsContext2D());
-        VBox canvasBox = new VBox(canvas);
-        this.setCenter(canvasBox);
+        this.setCenter(canvas);
 
         setBackground(new Background(new BackgroundFill(javafx.scene.paint.Color.gray(0.7), CornerRadii.EMPTY, Insets.EMPTY)));
 

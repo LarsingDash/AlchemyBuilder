@@ -13,6 +13,7 @@ import java.util.ArrayList;
 public class GameSave implements Serializable {
     public GameSave() {
     }
+
     private ArrayList<SavablePoint> savedPoints = new ArrayList<>();
 
     private ArrayList<String> savedElements  = new ArrayList<>();
