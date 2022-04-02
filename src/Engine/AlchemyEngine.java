@@ -86,7 +86,7 @@ public class AlchemyEngine extends Application {
         stage.setScene(new Scene(gameView));
         stage.show();
 
-        try (Scanner fileSearcher = new Scanner("src/Engine/saving/lastSavePath.txt")) {
+        try (Scanner fileSearcher = new Scanner("src/Engine/Saving/lastSavePath.txt")) {
             File file = new File(fileSearcher.nextLine());
             try (Scanner fileReader = new Scanner(file)) {
                 if (file.length() > 0) loadSave(true, stage, new File(fileReader.nextLine()));
