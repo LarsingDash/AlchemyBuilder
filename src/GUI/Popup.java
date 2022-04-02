@@ -56,5 +56,6 @@ abstract public class Popup extends Stage {
     }
 
     abstract public void yesButton();
+
     abstract public void noButton();
 }

@@ -32,22 +32,27 @@ public class GameView extends BorderPane {
     //GUI
     private final Canvas canvas = new Canvas();
     private FXGraphics2D graphics;
+
     private final javafx.scene.text.Font font = new Font("Arial Black", 20);
     private final javafx.scene.text.Font bigFont = new Font("Arial Black", 30);
 
     //Mouse
     private MouseEvent lastMouseEvent = null;
     private boolean isMousePressed = false;
+
     private double hor = 0d;
     private double ver = 0d;
 
     //Shift
     private boolean isShiftDown = false;
     private boolean firstShift = true;
+
     private double shiftHor = 0d;
     private double shiftVer = 0d;
+
     private Direction direction = Direction.UP;
     private Direction lastDirection = direction;
+
     private double width = 0d;
     private double height = 0d;
 

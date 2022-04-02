@@ -145,16 +145,16 @@ public abstract class Element implements Cloneable {
         return isLit;
     }
 
+    public void setLit(boolean lit) {
+        isLit = lit;
+    }
+
     public boolean isFlammable() {
         return isFlammable;
     }
 
     public int getBurnCount() {
         return burnCount;
-    }
-
-    public void setLit(boolean lit) {
-        isLit = lit;
     }
 
     //Other
