@@ -20,8 +20,8 @@ public class ElementButton extends ToggleButton {
         this.element = element;
 
         setMinSize(50, 50);
-        normal = new BackgroundImage(new Image(new File("src/resources/" + imageURL + ".png").toURI().toString()), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
-        selected = new BackgroundImage(new Image(new File("src/resources/" + imageURL + "Selected.png").toURI().toString()), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
+        normal = new BackgroundImage(new Image(new File("src/Resources/Elements/" + imageURL + ".png").toURI().toString()), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
+        selected = new BackgroundImage(new Image(new File("src/Resources/ElementsSelected/" + imageURL + "Selected.png").toURI().toString()), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
 
         setBackground(new Background(normal));
         setTooltip(new Tooltip(imageURL));

@@ -547,10 +547,10 @@ public class AlchemyEngine extends Application {
             if (file == null) {
                 file = buildFileChooser().showOpenDialog(window);
             }
-
             try (Scanner scanner = new Scanner(file)) {
                 elements = objectReader.readValue(scanner.nextLine(), GameSave.class).getSavedElements(this);
             } catch (IOException e) {
+                System.out.println("unable to find loadFile");
                 e.printStackTrace();
             } catch (NullPointerException e) {
                 return false;
