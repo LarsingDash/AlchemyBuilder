@@ -22,3 +22,4 @@
 hs_err_pid*
 src/Engine/Saving/lastSavePath.txt
 out/production/AlchemyBuilder/Engine/Saving/lastSavePath.txt
+src/Engine/Saving/lastSavePath.txt
